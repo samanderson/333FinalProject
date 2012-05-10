@@ -9,9 +9,18 @@
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
 #import "MapViewController.h"
+#import "FBConnect.h"
+#import "FBRequest.h"
+#import "ReviewTVC.h"
+#import "ShareTableViewController.h"
+#import "FirstViewController.h"
+#import "ShareTableViewController.h"
+#import "FacebookFriend.h"
 
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate> {
+@interface AppDelegate : UIResponder <UIApplicationDelegate, FBSessionDelegate, FBRequestDelegate> {
+    Facebook *facebook;
+    NSMutableArray* friendNames;
     UIWindow *window;
     UITabBarController *tabBarController;
     NSManagedObjectModel *managedObjectModel;
@@ -19,7 +28,10 @@
     NSPersistentStoreCoordinator *persistentStoreCoordinator;
 }
 
+@property (strong, nonatomic) NSMutableArray* friendNames;
+@property (nonatomic, retain) Facebook *facebook;
 @property (strong, nonatomic) UIWindow *window;
+
 
 @property (nonatomic, retain) IBOutlet UITabBarController *tabBarController;
 @property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;

@@ -19,8 +19,9 @@
 #import "MapPointData.h"
 #import "AnnotationData.h"
 #import "AppDelegate.h"
+#import "MyRoutesTableViewController.h"
 
-@interface MapViewController : UIViewController <ToggleTracking,MKMapViewDelegate, CLLocationManagerDelegate, NSFetchedResultsControllerDelegate>
+@interface MapViewController : UIViewController <ToggleTracking,MKMapViewDelegate, CLLocationManagerDelegate, NSFetchedResultsControllerDelegate, MyRoutesTableViewControllerDelegate>
 {
     BOOL track;
     NSString *routeName;
@@ -31,11 +32,11 @@
     RouteView *routeView;
     Route * currRoute;
     int numPoints;
+    int timerCounter;
     CLLocation *prevLocation;
     BOOL viewedInMap;
 }
 
-@property (nonatomic, strong) NSMutableArray *annotations;
 @property (nonatomic, strong) NSMutableArray *routes;
 @property (copy) NSString *routeName;
 @property BOOL track;

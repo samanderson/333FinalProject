@@ -24,13 +24,16 @@
 		1522169D152AB0CF00FFFC82 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1522169C152AB0CF00FFFC82 /* SenTestingKit.framework */; };
 		1522169E152AB0CF00FFFC82 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15221670152AB0CF00FFFC82 /* UIKit.framework */; };
 		1522169F152AB0CF00FFFC82 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15221672152AB0CF00FFFC82 /* Foundation.framework */; };
-		152216A7152AB0CF00FFFC82 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 152216A5152AB0CF00FFFC82 /* InfoPlist.strings */; };
-		152216AA152AB0CF00FFFC82 /* RouteRankerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 152216A9152AB0CF00FFFC82 /* RouteRankerTests.m */; };
 		152216B4152B6E2B00FFFC82 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 152216B3152B6E2B00FFFC82 /* MapKit.framework */; };
 		152216B6152B6E3E00FFFC82 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 152216B5152B6E3E00FFFC82 /* CoreLocation.framework */; };
 		152216B9152D41CE00FFFC82 /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 152216B8152D41CE00FFFC82 /* MapViewController.m */; };
 		153A26C915507DF300A10B2A /* RouteRanker.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 153A26C715507DF300A10B2A /* RouteRanker.xcdatamodeld */; };
 		153A27071550BC5100A10B2A /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 153A27061550BC5100A10B2A /* CoreData.framework */; };
+		154827F4155B022300191B5E /* SingleRouteStatsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 154827F3155B022300191B5E /* SingleRouteStatsVC.m */; };
+		154827F8155B18CF00191B5E /* MyRoutesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 154827F7155B18CF00191B5E /* MyRoutesTableViewController.m */; };
+		154827FB155B198F00191B5E /* PrevRouteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 154827FA155B198F00191B5E /* PrevRouteViewController.m */; };
+		15482800155B1AAE00191B5E /* EditRouteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 154827FD155B1AAD00191B5E /* EditRouteViewController.m */; };
+		15482801155B1AAE00191B5E /* RouteData+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 154827FF155B1AAE00191B5E /* RouteData+Helper.m */; };
 		15584383154F9F0F00533CAF /* GroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 15584382154F9F0F00533CAF /* GroupViewController.m */; };
 		1558438C154FE59700533CAF /* AutoAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1558438B154FE59700533CAF /* AutoAnnotation.m */; };
 		15584392154FED2400533CAF /* AutoAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1558438B154FE59700533CAF /* AutoAnnotation.m */; };
@@ -40,18 +43,54 @@
 		155C1018154CC7CF00526805 /* kalman.m in Sources */ = {isa = PBXBuildFile; fileRef = 155C1017154CC7CF00526805 /* kalman.m */; };
 		155C101A154CC82B00526805 /* matrix.m in Sources */ = {isa = PBXBuildFile; fileRef = 155C1019154CC82B00526805 /* matrix.m */; };
 		155C101D154CC85500526805 /* gps.m in Sources */ = {isa = PBXBuildFile; fileRef = 155C101C154CC85500526805 /* gps.m */; };
-		1562D06F1551D44100219A92 /* RouteData.m in Sources */ = {isa = PBXBuildFile; fileRef = 1562D06E1551D44100219A92 /* RouteData.m */; };
 		1562D0781551D7A000219A92 /* MapPointData.m in Sources */ = {isa = PBXBuildFile; fileRef = 1562D0771551D7A000219A92 /* MapPointData.m */; };
 		1562D07B1551D7B400219A92 /* AnnotationData.m in Sources */ = {isa = PBXBuildFile; fileRef = 1562D07A1551D7B100219A92 /* AnnotationData.m */; };
-		15961C9215492E6900F77D67 /* graph.png in Resources */ = {isa = PBXBuildFile; fileRef = 15961C9115492E6900F77D67 /* graph.png */; };
-		15961C9415492E7500F77D67 /* connections.png in Resources */ = {isa = PBXBuildFile; fileRef = 15961C9315492E7500F77D67 /* connections.png */; };
-		15961C9615492EE300F77D67 /* world.png in Resources */ = {isa = PBXBuildFile; fileRef = 15961C9515492EE300F77D67 /* world.png */; };
-		15961C9815492F5400F77D67 /* house.png in Resources */ = {isa = PBXBuildFile; fileRef = 15961C9715492F5400F77D67 /* house.png */; };
+		1562D0861552262F00219A92 /* CompareVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1562D07D1552262D00219A92 /* CompareVC.m */; };
+		1562D0871552262F00219A92 /* NewGroupTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1562D07F1552262E00219A92 /* NewGroupTVC.m */; };
+		1562D0881552262F00219A92 /* PathsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1562D0811552262E00219A92 /* PathsTableViewController.m */; };
+		1562D0891552262F00219A92 /* ReviewTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1562D0831552262F00219A92 /* ReviewTVC.m */; };
+		1562D08A1552262F00219A92 /* ShareTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1562D0851552262F00219A92 /* ShareTableViewController.m */; };
+		1562D2E915522C2300219A92 /* FBDialog.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1562D2DC15522C2300219A92 /* FBDialog.bundle */; };
+		1562D2EA15522C2300219A92 /* libfacebook_ios_sdk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1562D2E215522C2300219A92 /* libfacebook_ios_sdk.a */; };
+		1562D2EE1552304200219A92 /* EditGroupTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1562D2ED1552304200219A92 /* EditGroupTVC.m */; };
+		1562D2F2155236C300219A92 /* EditGroupTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1562D2ED1552304200219A92 /* EditGroupTVC.m */; };
+		1562D2F4155236D100219A92 /* CompareVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1562D07D1552262D00219A92 /* CompareVC.m */; };
+		1562D2F5155236DB00219A92 /* ReviewTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1562D0831552262F00219A92 /* ReviewTVC.m */; };
+		1562D2F6155236DB00219A92 /* PathsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1562D0811552262E00219A92 /* PathsTableViewController.m */; };
+		1562D2F7155236DB00219A92 /* ShareTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1562D0851552262F00219A92 /* ShareTableViewController.m */; };
+		1562D2F915523A0B00219A92 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1522169C152AB0CF00FFFC82 /* SenTestingKit.framework */; };
+		1562D2FA15523A9C00219A92 /* NewGroupTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1562D07F1552262E00219A92 /* NewGroupTVC.m */; };
+		1562D2FB15524D0200219A92 /* kalman.m in Sources */ = {isa = PBXBuildFile; fileRef = 155C1017154CC7CF00526805 /* kalman.m */; };
+		1562D2FC15524D0200219A92 /* matrix.m in Sources */ = {isa = PBXBuildFile; fileRef = 155C1019154CC82B00526805 /* matrix.m */; };
+		1562D2FD15524D0A00219A92 /* gps.m in Sources */ = {isa = PBXBuildFile; fileRef = 155C101C154CC85500526805 /* gps.m */; };
+		1562D2FE15524D1200219A92 /* FirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 15221689152AB0CF00FFFC82 /* FirstViewController.m */; };
+		1562D2FF15524D1700219A92 /* RouteView.m in Sources */ = {isa = PBXBuildFile; fileRef = 15C29B64153674FC009901F9 /* RouteView.m */; };
+		1562D30015524D1C00219A92 /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 152216B8152D41CE00FFFC82 /* MapViewController.m */; };
+		1562D30115524D2200219A92 /* SecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 15221690152AB0CF00FFFC82 /* SecondViewController.m */; };
+		1562D30215524D2800219A92 /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 155843A6155053B100533CAF /* Group.m */; };
+		1562D30315524D2E00219A92 /* GroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 15584382154F9F0F00533CAF /* GroupViewController.m */; };
+		1562D30415524D3300219A92 /* RouteAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 15AAC4F8153FF2CD007C4D61 /* RouteAnnotation.m */; };
+		1562D30515524D3900219A92 /* AnnotationData.m in Sources */ = {isa = PBXBuildFile; fileRef = 1562D07A1551D7B100219A92 /* AnnotationData.m */; };
+		1562D30615524D4900219A92 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1522167C152AB0CF00FFFC82 /* main.m */; };
+		1562D30715524D4F00219A92 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 15221680152AB0CF00FFFC82 /* AppDelegate.m */; };
+		1562D30915524D5F00219A92 /* MapPointData.m in Sources */ = {isa = PBXBuildFile; fileRef = 1562D0771551D7A000219A92 /* MapPointData.m */; };
+		1590F2C5155C2B3D00B40ABE /* RouteRanker-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1590F2C4155C2B3D00B40ABE /* RouteRanker-Info.plist */; };
+		1590F2CD155C2C8B00B40ABE /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1590F2CC155C2C8B00B40ABE /* icon@2x.png */; };
+		1590F2CF155C306700B40ABE /* icon (3).png in Resources */ = {isa = PBXBuildFile; fileRef = 1590F2CE155C306700B40ABE /* icon (3).png */; };
+		15961C9215492E6900F77D67 /* graph@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 15961C9115492E6900F77D67 /* graph@2x.png */; };
+		15961C9415492E7500F77D67 /* connections@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 15961C9315492E7500F77D67 /* connections@2x.png */; };
+		15961C9615492EE300F77D67 /* world@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 15961C9515492EE300F77D67 /* world@2x.png */; };
+		15961C9815492F5400F77D67 /* house@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 15961C9715492F5400F77D67 /* house@2x.png */; };
 		15AAC4F9153FF2CD007C4D61 /* RouteAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 15AAC4F8153FF2CD007C4D61 /* RouteAnnotation.m */; };
 		15C29B65153674FC009901F9 /* RouteView.m in Sources */ = {isa = PBXBuildFile; fileRef = 15C29B64153674FC009901F9 /* RouteView.m */; };
 		15E412AB15511E7800D906AA /* Route.m in Sources */ = {isa = PBXBuildFile; fileRef = 15E412AA15511E7800D906AA /* Route.m */; };
-		15E412AE15511EA900D906AA /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 15E412AD15511EA900D906AA /* icon.png */; };
 		15E412AF15511F0000D906AA /* Route.m in Sources */ = {isa = PBXBuildFile; fileRef = 15E412AA15511E7800D906AA /* Route.m */; };
+		15EF0DC71558562B003C2575 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 15EF0DC21558562B003C2575 /* InfoPlist.strings */; };
+		15EF0DC81558562B003C2575 /* RouteRankerTests-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 15EF0DC41558562B003C2575 /* RouteRankerTests-Info.plist */; };
+		15EF0DC91558562B003C2575 /* RouteRankerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 15EF0DC61558562B003C2575 /* RouteRankerTests.m */; };
+		15EF0DCD15586FAA003C2575 /* GroupData.m in Sources */ = {isa = PBXBuildFile; fileRef = 15EF0DCC15586FAA003C2575 /* GroupData.m */; };
+		15EF0DD015586FBA003C2575 /* RouteData.m in Sources */ = {isa = PBXBuildFile; fileRef = 15EF0DCF15586FBA003C2575 /* RouteData.m */; };
+		15EF0DD3155899C2003C2575 /* FacebookFriend.m in Sources */ = {isa = PBXBuildFile; fileRef = 15EF0DD2155899C1003C2575 /* FacebookFriend.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,7 +108,6 @@
 		15221670152AB0CF00FFFC82 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		15221672152AB0CF00FFFC82 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		15221674152AB0CF00FFFC82 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		15221678152AB0CF00FFFC82 /* RouteRanker-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "RouteRanker-Info.plist"; sourceTree = "<group>"; };
 		1522167A152AB0CF00FFFC82 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1522167C152AB0CF00FFFC82 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		1522167E152AB0CF00FFFC82 /* RouteRanker-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RouteRanker-Prefix.pch"; sourceTree = "<group>"; };
@@ -87,16 +125,22 @@
 		15221694152AB0CF00FFFC82 /* second@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "second@2x.png"; sourceTree = "<group>"; };
 		1522169B152AB0CF00FFFC82 /* RouteRankerTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RouteRankerTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1522169C152AB0CF00FFFC82 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		152216A4152AB0CF00FFFC82 /* RouteRankerTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "RouteRankerTests-Info.plist"; sourceTree = "<group>"; };
-		152216A6152AB0CF00FFFC82 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		152216A8152AB0CF00FFFC82 /* RouteRankerTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RouteRankerTests.h; sourceTree = "<group>"; };
-		152216A9152AB0CF00FFFC82 /* RouteRankerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RouteRankerTests.m; sourceTree = "<group>"; };
 		152216B3152B6E2B00FFFC82 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		152216B5152B6E3E00FFFC82 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		152216B7152D41CE00FFFC82 /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
 		152216B8152D41CE00FFFC82 /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
 		153A26C815507DF300A10B2A /* RouteRanker.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = RouteRanker.xcdatamodel; sourceTree = "<group>"; };
 		153A27061550BC5100A10B2A /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CoreData.framework; sourceTree = "<group>"; };
+		154827F2155B022300191B5E /* SingleRouteStatsVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SingleRouteStatsVC.h; sourceTree = "<group>"; };
+		154827F3155B022300191B5E /* SingleRouteStatsVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SingleRouteStatsVC.m; sourceTree = "<group>"; };
+		154827F6155B18CF00191B5E /* MyRoutesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyRoutesTableViewController.h; sourceTree = "<group>"; };
+		154827F7155B18CF00191B5E /* MyRoutesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyRoutesTableViewController.m; sourceTree = "<group>"; };
+		154827F9155B198F00191B5E /* PrevRouteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrevRouteViewController.h; sourceTree = "<group>"; };
+		154827FA155B198F00191B5E /* PrevRouteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrevRouteViewController.m; sourceTree = "<group>"; };
+		154827FC155B1AAD00191B5E /* EditRouteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditRouteViewController.h; sourceTree = "<group>"; };
+		154827FD155B1AAD00191B5E /* EditRouteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditRouteViewController.m; sourceTree = "<group>"; };
+		154827FE155B1AAD00191B5E /* RouteData+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RouteData+Helper.h"; sourceTree = "<group>"; };
+		154827FF155B1AAE00191B5E /* RouteData+Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RouteData+Helper.m"; sourceTree = "<group>"; };
 		15584381154F9F0E00533CAF /* GroupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupViewController.h; sourceTree = "<group>"; };
 		15584382154F9F0F00533CAF /* GroupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupViewController.m; sourceTree = "<group>"; };
 		1558438A154FE59700533CAF /* AutoAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoAnnotation.h; sourceTree = "<group>"; };
@@ -111,24 +155,61 @@
 		155C1019154CC82B00526805 /* matrix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = matrix.m; sourceTree = "<group>"; };
 		155C101B154CC83F00526805 /* kalman.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kalman.h; sourceTree = "<group>"; };
 		155C101C154CC85500526805 /* gps.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = gps.m; sourceTree = "<group>"; };
-		1562D06D1551D44000219A92 /* RouteData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteData.h; sourceTree = "<group>"; };
-		1562D06E1551D44100219A92 /* RouteData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RouteData.m; sourceTree = "<group>"; };
 		1562D0761551D7A000219A92 /* MapPointData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapPointData.h; sourceTree = "<group>"; };
 		1562D0771551D7A000219A92 /* MapPointData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapPointData.m; sourceTree = "<group>"; };
 		1562D0791551D7B100219A92 /* AnnotationData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnnotationData.h; sourceTree = "<group>"; };
 		1562D07A1551D7B100219A92 /* AnnotationData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnnotationData.m; sourceTree = "<group>"; };
+		1562D07C1552262D00219A92 /* CompareVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CompareVC.h; sourceTree = "<group>"; };
+		1562D07D1552262D00219A92 /* CompareVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CompareVC.m; sourceTree = "<group>"; };
+		1562D07E1552262E00219A92 /* NewGroupTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewGroupTVC.h; sourceTree = "<group>"; };
+		1562D07F1552262E00219A92 /* NewGroupTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewGroupTVC.m; sourceTree = "<group>"; };
+		1562D0801552262E00219A92 /* PathsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PathsTableViewController.h; sourceTree = "<group>"; };
+		1562D0811552262E00219A92 /* PathsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PathsTableViewController.m; sourceTree = "<group>"; };
+		1562D0821552262E00219A92 /* ReviewTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReviewTVC.h; sourceTree = "<group>"; };
+		1562D0831552262F00219A92 /* ReviewTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReviewTVC.m; sourceTree = "<group>"; };
+		1562D0841552262F00219A92 /* ShareTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShareTableViewController.h; sourceTree = "<group>"; };
+		1562D0851552262F00219A92 /* ShareTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShareTableViewController.m; sourceTree = "<group>"; };
+		1562D2DA15522C2300219A92 /* Facebook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Facebook.h; sourceTree = "<group>"; };
+		1562D2DB15522C2300219A92 /* FBConnect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBConnect.h; sourceTree = "<group>"; };
+		1562D2DC15522C2300219A92 /* FBDialog.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = FBDialog.bundle; sourceTree = "<group>"; };
+		1562D2DD15522C2300219A92 /* FBDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBDialog.h; sourceTree = "<group>"; };
+		1562D2DE15522C2300219A92 /* FBFrictionlessRequestSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBFrictionlessRequestSettings.h; sourceTree = "<group>"; };
+		1562D2DF15522C2300219A92 /* FBLoginDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBLoginDialog.h; sourceTree = "<group>"; };
+		1562D2E015522C2300219A92 /* FBRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBRequest.h; sourceTree = "<group>"; };
+		1562D2E115522C2300219A92 /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSON.h; sourceTree = "<group>"; };
+		1562D2E215522C2300219A92 /* libfacebook_ios_sdk.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libfacebook_ios_sdk.a; sourceTree = "<group>"; };
+		1562D2E315522C2300219A92 /* NSObject+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJSON.h"; sourceTree = "<group>"; };
+		1562D2E415522C2300219A92 /* NSString+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+SBJSON.h"; sourceTree = "<group>"; };
+		1562D2E515522C2300219A92 /* SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJSON.h; sourceTree = "<group>"; };
+		1562D2E615522C2300219A92 /* SBJsonBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonBase.h; sourceTree = "<group>"; };
+		1562D2E715522C2300219A92 /* SBJsonParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonParser.h; sourceTree = "<group>"; };
+		1562D2E815522C2300219A92 /* SBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonWriter.h; sourceTree = "<group>"; };
+		1562D2EC1552304200219A92 /* EditGroupTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditGroupTVC.h; sourceTree = "<group>"; };
+		1562D2ED1552304200219A92 /* EditGroupTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditGroupTVC.m; sourceTree = "<group>"; };
 		1583D0DA153713F40017154A /* test2.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = test2.gpx; path = ../../../Downloads/test2.gpx; sourceTree = "<group>"; };
-		15961C9115492E6900F77D67 /* graph.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = graph.png; sourceTree = "<group>"; };
-		15961C9315492E7500F77D67 /* connections.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = connections.png; sourceTree = "<group>"; };
-		15961C9515492EE300F77D67 /* world.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = world.png; sourceTree = "<group>"; };
-		15961C9715492F5400F77D67 /* house.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = house.png; sourceTree = "<group>"; };
+		1590F2C4155C2B3D00B40ABE /* RouteRanker-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "RouteRanker-Info.plist"; sourceTree = "<group>"; };
+		1590F2CC155C2C8B00B40ABE /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
+		1590F2CE155C306700B40ABE /* icon (3).png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon (3).png"; sourceTree = "<group>"; };
+		15961C9115492E6900F77D67 /* graph@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "graph@2x.png"; sourceTree = "<group>"; };
+		15961C9315492E7500F77D67 /* connections@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "connections@2x.png"; sourceTree = "<group>"; };
+		15961C9515492EE300F77D67 /* world@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "world@2x.png"; sourceTree = "<group>"; };
+		15961C9715492F5400F77D67 /* house@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "house@2x.png"; sourceTree = "<group>"; };
 		15AAC4F7153FF2CD007C4D61 /* RouteAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteAnnotation.h; sourceTree = "<group>"; };
 		15AAC4F8153FF2CD007C4D61 /* RouteAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RouteAnnotation.m; sourceTree = "<group>"; };
 		15C29B63153674FC009901F9 /* RouteView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteView.h; sourceTree = "<group>"; };
 		15C29B64153674FC009901F9 /* RouteView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RouteView.m; sourceTree = "<group>"; };
 		15E412A915511E7800D906AA /* Route.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Route.h; sourceTree = "<group>"; };
 		15E412AA15511E7800D906AA /* Route.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Route.m; sourceTree = "<group>"; };
-		15E412AD15511EA900D906AA /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
+		15EF0DC31558562B003C2575 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		15EF0DC41558562B003C2575 /* RouteRankerTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "RouteRankerTests-Info.plist"; sourceTree = "<group>"; };
+		15EF0DC51558562B003C2575 /* RouteRankerTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteRankerTests.h; sourceTree = "<group>"; };
+		15EF0DC61558562B003C2575 /* RouteRankerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RouteRankerTests.m; sourceTree = "<group>"; };
+		15EF0DCB15586FAA003C2575 /* GroupData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupData.h; sourceTree = "<group>"; };
+		15EF0DCC15586FAA003C2575 /* GroupData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupData.m; sourceTree = "<group>"; };
+		15EF0DCE15586FBA003C2575 /* RouteData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteData.h; sourceTree = "<group>"; };
+		15EF0DCF15586FBA003C2575 /* RouteData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RouteData.m; sourceTree = "<group>"; };
+		15EF0DD1155899C1003C2575 /* FacebookFriend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FacebookFriend.h; sourceTree = "<group>"; };
+		15EF0DD2155899C1003C2575 /* FacebookFriend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FacebookFriend.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,12 +217,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1562D2F915523A0B00219A92 /* SenTestingKit.framework in Frameworks */,
 				152216B6152B6E3E00FFFC82 /* CoreLocation.framework in Frameworks */,
 				152216B4152B6E2B00FFFC82 /* MapKit.framework in Frameworks */,
 				15221671152AB0CF00FFFC82 /* UIKit.framework in Frameworks */,
 				15221673152AB0CF00FFFC82 /* Foundation.framework in Frameworks */,
 				15221675152AB0CF00FFFC82 /* CoreGraphics.framework in Frameworks */,
 				153A27071550BC5100A10B2A /* CoreData.framework in Frameworks */,
+				1562D2EA15522C2300219A92 /* libfacebook_ios_sdk.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -161,12 +244,13 @@
 		15221661152AB0CF00FFFC82 = {
 			isa = PBXGroup;
 			children = (
+				1590F2CE155C306700B40ABE /* icon (3).png */,
+				1590F2CC155C2C8B00B40ABE /* icon@2x.png */,
 				1583D0DA153713F40017154A /* test2.gpx */,
 				153A27061550BC5100A10B2A /* CoreData.framework */,
 				152216B5152B6E3E00FFFC82 /* CoreLocation.framework */,
 				152216B3152B6E2B00FFFC82 /* MapKit.framework */,
 				15221676152AB0CF00FFFC82 /* RouteRanker */,
-				152216A2152AB0CF00FFFC82 /* RouteRankerTests */,
 				1522166F152AB0CF00FFFC82 /* Frameworks */,
 				1522166D152AB0CF00FFFC82 /* Products */,
 			);
@@ -184,10 +268,10 @@
 		1522166F152AB0CF00FFFC82 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1522169C152AB0CF00FFFC82 /* SenTestingKit.framework */,
 				15221670152AB0CF00FFFC82 /* UIKit.framework */,
 				15221672152AB0CF00FFFC82 /* Foundation.framework */,
 				15221674152AB0CF00FFFC82 /* CoreGraphics.framework */,
-				1522169C152AB0CF00FFFC82 /* SenTestingKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -204,6 +288,10 @@
 				155C101C154CC85500526805 /* gps.m */,
 				15E412A915511E7800D906AA /* Route.h */,
 				15E412AA15511E7800D906AA /* Route.m */,
+				154827FC155B1AAD00191B5E /* EditRouteViewController.h */,
+				154827FD155B1AAD00191B5E /* EditRouteViewController.m */,
+				154827FE155B1AAD00191B5E /* RouteData+Helper.h */,
+				154827FF155B1AAE00191B5E /* RouteData+Helper.m */,
 				15C29B63153674FC009901F9 /* RouteView.h */,
 				15C29B64153674FC009901F9 /* RouteView.m */,
 				152216B7152D41CE00FFFC82 /* MapViewController.h */,
@@ -212,10 +300,28 @@
 				155843A6155053B100533CAF /* Group.m */,
 				15584381154F9F0E00533CAF /* GroupViewController.h */,
 				15584382154F9F0F00533CAF /* GroupViewController.m */,
-				1522167F152AB0CF00FFFC82 /* AppDelegate.h */,
-				15221680152AB0CF00FFFC82 /* AppDelegate.m */,
+				1562D0801552262E00219A92 /* PathsTableViewController.h */,
+				1562D0811552262E00219A92 /* PathsTableViewController.m */,
+				1562D2EC1552304200219A92 /* EditGroupTVC.h */,
+				1562D2ED1552304200219A92 /* EditGroupTVC.m */,
+				1562D07C1552262D00219A92 /* CompareVC.h */,
+				1562D07D1552262D00219A92 /* CompareVC.m */,
+				154827F2155B022300191B5E /* SingleRouteStatsVC.h */,
+				154827F3155B022300191B5E /* SingleRouteStatsVC.m */,
+				1562D07E1552262E00219A92 /* NewGroupTVC.h */,
+				1562D07F1552262E00219A92 /* NewGroupTVC.m */,
+				1562D0821552262E00219A92 /* ReviewTVC.h */,
+				1562D0831552262F00219A92 /* ReviewTVC.m */,
+				1562D0851552262F00219A92 /* ShareTableViewController.m */,
+				1562D0841552262F00219A92 /* ShareTableViewController.h */,
+				15EF0DD2155899C1003C2575 /* FacebookFriend.m */,
+				15EF0DD1155899C1003C2575 /* FacebookFriend.h */,
 				15221682152AB0CF00FFFC82 /* MainStoryboard_iPhone.storyboard */,
 				15221685152AB0CF00FFFC82 /* MainStoryboard_iPad.storyboard */,
+				154827F9155B198F00191B5E /* PrevRouteViewController.h */,
+				154827FA155B198F00191B5E /* PrevRouteViewController.m */,
+				154827F6155B18CF00191B5E /* MyRoutesTableViewController.h */,
+				154827F7155B18CF00191B5E /* MyRoutesTableViewController.m */,
 				15221688152AB0CF00FFFC82 /* FirstViewController.h */,
 				15221689152AB0CF00FFFC82 /* FirstViewController.m */,
 				1522168F152AB0CF00FFFC82 /* SecondViewController.h */,
@@ -224,14 +330,20 @@
 				15AAC4F8153FF2CD007C4D61 /* RouteAnnotation.m */,
 				1558438A154FE59700533CAF /* AutoAnnotation.h */,
 				1558438B154FE59700533CAF /* AutoAnnotation.m */,
+				1522167F152AB0CF00FFFC82 /* AppDelegate.h */,
+				15221680152AB0CF00FFFC82 /* AppDelegate.m */,
+				1562D2D915522C2300219A92 /* facebook-ios-sdk */,
 				15221677152AB0CF00FFFC82 /* Supporting Files */,
-				1562D06D1551D44000219A92 /* RouteData.h */,
-				1562D06E1551D44100219A92 /* RouteData.m */,
 				1562D0761551D7A000219A92 /* MapPointData.h */,
 				1562D0771551D7A000219A92 /* MapPointData.m */,
 				1562D0791551D7B100219A92 /* AnnotationData.h */,
 				1562D07A1551D7B100219A92 /* AnnotationData.m */,
 				153A26C715507DF300A10B2A /* RouteRanker.xcdatamodeld */,
+				15EF0DCE15586FBA003C2575 /* RouteData.h */,
+				15EF0DCF15586FBA003C2575 /* RouteData.m */,
+				15EF0DCB15586FAA003C2575 /* GroupData.h */,
+				15EF0DCC15586FAA003C2575 /* GroupData.m */,
+				15EF0DC11558562B003C2575 /* RouteRankerTests */,
 			);
 			path = RouteRanker;
 			sourceTree = "<group>";
@@ -239,7 +351,7 @@
 		15221677152AB0CF00FFFC82 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				15221678152AB0CF00FFFC82 /* RouteRanker-Info.plist */,
+				1590F2C4155C2B3D00B40ABE /* RouteRanker-Info.plist */,
 				15221679152AB0CF00FFFC82 /* InfoPlist.strings */,
 				1522167C152AB0CF00FFFC82 /* main.m */,
 				1522167E152AB0CF00FFFC82 /* RouteRanker-Prefix.pch */,
@@ -247,41 +359,54 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		152216A2152AB0CF00FFFC82 /* RouteRankerTests */ = {
+		1562D2D915522C2300219A92 /* facebook-ios-sdk */ = {
 			isa = PBXGroup;
 			children = (
-				152216A8152AB0CF00FFFC82 /* RouteRankerTests.h */,
-				152216A9152AB0CF00FFFC82 /* RouteRankerTests.m */,
-				152216A3152AB0CF00FFFC82 /* Supporting Files */,
+				1562D2DA15522C2300219A92 /* Facebook.h */,
+				1562D2DB15522C2300219A92 /* FBConnect.h */,
+				1562D2DC15522C2300219A92 /* FBDialog.bundle */,
+				1562D2DD15522C2300219A92 /* FBDialog.h */,
+				1562D2DE15522C2300219A92 /* FBFrictionlessRequestSettings.h */,
+				1562D2DF15522C2300219A92 /* FBLoginDialog.h */,
+				1562D2E015522C2300219A92 /* FBRequest.h */,
+				1562D2E115522C2300219A92 /* JSON.h */,
+				1562D2E215522C2300219A92 /* libfacebook_ios_sdk.a */,
+				1562D2E315522C2300219A92 /* NSObject+SBJSON.h */,
+				1562D2E415522C2300219A92 /* NSString+SBJSON.h */,
+				1562D2E515522C2300219A92 /* SBJSON.h */,
+				1562D2E615522C2300219A92 /* SBJsonBase.h */,
+				1562D2E715522C2300219A92 /* SBJsonParser.h */,
+				1562D2E815522C2300219A92 /* SBJsonWriter.h */,
 			);
-			path = RouteRankerTests;
-			sourceTree = "<group>";
-		};
-		152216A3152AB0CF00FFFC82 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				152216A4152AB0CF00FFFC82 /* RouteRankerTests-Info.plist */,
-				152216A5152AB0CF00FFFC82 /* InfoPlist.strings */,
-			);
-			name = "Supporting Files";
+			path = "facebook-ios-sdk";
 			sourceTree = "<group>";
 		};
 		15961C8815492C6600F77D67 /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				15E412AD15511EA900D906AA /* icon.png */,
 				1522168B152AB0CF00FFFC82 /* first.png */,
-				15961C9315492E7500F77D67 /* connections.png */,
+				15961C9315492E7500F77D67 /* connections@2x.png */,
 				155843A3154FF91E00533CAF /* aqua_dot.png */,
 				155843A1154FF91400533CAF /* image.png */,
-				15961C9115492E6900F77D67 /* graph.png */,
-				15961C9515492EE300F77D67 /* world.png */,
-				15961C9715492F5400F77D67 /* house.png */,
+				15961C9115492E6900F77D67 /* graph@2x.png */,
+				15961C9515492EE300F77D67 /* world@2x.png */,
+				15961C9715492F5400F77D67 /* house@2x.png */,
 				15221694152AB0CF00FFFC82 /* second@2x.png */,
 				1522168D152AB0CF00FFFC82 /* first@2x.png */,
 				15221692152AB0CF00FFFC82 /* second.png */,
 			);
 			name = Images;
+			sourceTree = "<group>";
+		};
+		15EF0DC11558562B003C2575 /* RouteRankerTests */ = {
+			isa = PBXGroup;
+			children = (
+				15EF0DC21558562B003C2575 /* InfoPlist.strings */,
+				15EF0DC41558562B003C2575 /* RouteRankerTests-Info.plist */,
+				15EF0DC51558562B003C2575 /* RouteRankerTests.h */,
+				15EF0DC61558562B003C2575 /* RouteRankerTests.m */,
+			);
+			path = RouteRankerTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -361,13 +486,16 @@
 				1522168E152AB0CF00FFFC82 /* first@2x.png in Resources */,
 				15221693152AB0CF00FFFC82 /* second.png in Resources */,
 				15221695152AB0CF00FFFC82 /* second@2x.png in Resources */,
-				15961C9215492E6900F77D67 /* graph.png in Resources */,
-				15961C9415492E7500F77D67 /* connections.png in Resources */,
-				15961C9615492EE300F77D67 /* world.png in Resources */,
-				15961C9815492F5400F77D67 /* house.png in Resources */,
+				15961C9215492E6900F77D67 /* graph@2x.png in Resources */,
+				15961C9415492E7500F77D67 /* connections@2x.png in Resources */,
+				15961C9615492EE300F77D67 /* world@2x.png in Resources */,
+				15961C9815492F5400F77D67 /* house@2x.png in Resources */,
 				155843A2154FF91500533CAF /* image.png in Resources */,
 				155843A4154FF91F00533CAF /* aqua_dot.png in Resources */,
-				15E412AE15511EA900D906AA /* icon.png in Resources */,
+				1562D2E915522C2300219A92 /* FBDialog.bundle in Resources */,
+				1590F2C5155C2B3D00B40ABE /* RouteRanker-Info.plist in Resources */,
+				1590F2CD155C2C8B00B40ABE /* icon@2x.png in Resources */,
+				1590F2CF155C306700B40ABE /* icon (3).png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -375,7 +503,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				152216A7152AB0CF00FFFC82 /* InfoPlist.strings in Resources */,
+				15EF0DC71558562B003C2575 /* InfoPlist.strings in Resources */,
+				15EF0DC81558562B003C2575 /* RouteRankerTests-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -404,6 +533,12 @@
 			files = (
 				1522167D152AB0CF00FFFC82 /* main.m in Sources */,
 				15221681152AB0CF00FFFC82 /* AppDelegate.m in Sources */,
+				1562D2F5155236DB00219A92 /* ReviewTVC.m in Sources */,
+				1562D2FA15523A9C00219A92 /* NewGroupTVC.m in Sources */,
+				1562D2F6155236DB00219A92 /* PathsTableViewController.m in Sources */,
+				1562D2F7155236DB00219A92 /* ShareTableViewController.m in Sources */,
+				1562D2F4155236D100219A92 /* CompareVC.m in Sources */,
+				1562D2F2155236C300219A92 /* EditGroupTVC.m in Sources */,
 				1522168A152AB0CF00FFFC82 /* FirstViewController.m in Sources */,
 				15221691152AB0CF00FFFC82 /* SecondViewController.m in Sources */,
 				152216B9152D41CE00FFFC82 /* MapViewController.m in Sources */,
@@ -417,9 +552,16 @@
 				15584383154F9F0F00533CAF /* GroupViewController.m in Sources */,
 				155843A7155053B100533CAF /* Group.m in Sources */,
 				153A26C915507DF300A10B2A /* RouteRanker.xcdatamodeld in Sources */,
-				1562D06F1551D44100219A92 /* RouteData.m in Sources */,
 				1562D0781551D7A000219A92 /* MapPointData.m in Sources */,
 				1562D07B1551D7B400219A92 /* AnnotationData.m in Sources */,
+				15EF0DCD15586FAA003C2575 /* GroupData.m in Sources */,
+				15EF0DD015586FBA003C2575 /* RouteData.m in Sources */,
+				15EF0DD3155899C2003C2575 /* FacebookFriend.m in Sources */,
+				154827F4155B022300191B5E /* SingleRouteStatsVC.m in Sources */,
+				154827F8155B18CF00191B5E /* MyRoutesTableViewController.m in Sources */,
+				154827FB155B198F00191B5E /* PrevRouteViewController.m in Sources */,
+				15482800155B1AAE00191B5E /* EditRouteViewController.m in Sources */,
+				15482801155B1AAE00191B5E /* RouteData+Helper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -427,9 +569,29 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				152216AA152AB0CF00FFFC82 /* RouteRankerTests.m in Sources */,
+				1562D30915524D5F00219A92 /* MapPointData.m in Sources */,
+				1562D30715524D4F00219A92 /* AppDelegate.m in Sources */,
+				1562D30615524D4900219A92 /* main.m in Sources */,
+				1562D30515524D3900219A92 /* AnnotationData.m in Sources */,
+				1562D30415524D3300219A92 /* RouteAnnotation.m in Sources */,
+				1562D30315524D2E00219A92 /* GroupViewController.m in Sources */,
+				1562D30215524D2800219A92 /* Group.m in Sources */,
+				1562D30115524D2200219A92 /* SecondViewController.m in Sources */,
+				1562D30015524D1C00219A92 /* MapViewController.m in Sources */,
+				1562D2FF15524D1700219A92 /* RouteView.m in Sources */,
+				1562D2FE15524D1200219A92 /* FirstViewController.m in Sources */,
+				1562D2FD15524D0A00219A92 /* gps.m in Sources */,
+				1562D2FB15524D0200219A92 /* kalman.m in Sources */,
+				1562D2FC15524D0200219A92 /* matrix.m in Sources */,
 				1558438C154FE59700533CAF /* AutoAnnotation.m in Sources */,
 				15E412AB15511E7800D906AA /* Route.m in Sources */,
+				1562D0861552262F00219A92 /* CompareVC.m in Sources */,
+				1562D0871552262F00219A92 /* NewGroupTVC.m in Sources */,
+				1562D0881552262F00219A92 /* PathsTableViewController.m in Sources */,
+				1562D0891552262F00219A92 /* ReviewTVC.m in Sources */,
+				1562D08A1552262F00219A92 /* ShareTableViewController.m in Sources */,
+				1562D2EE1552304200219A92 /* EditGroupTVC.m in Sources */,
+				15EF0DC91558562B003C2575 /* RouteRankerTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -468,10 +630,10 @@
 			name = MainStoryboard_iPad.storyboard;
 			sourceTree = "<group>";
 		};
-		152216A5152AB0CF00FFFC82 /* InfoPlist.strings */ = {
+		15EF0DC21558562B003C2575 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				152216A6152AB0CF00FFFC82 /* en */,
+				15EF0DC31558562B003C2575 /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -532,11 +694,22 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
+					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "RouteRanker/RouteRanker-Prefix.pch";
 				INFOPLIST_FILE = "RouteRanker/RouteRanker-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/RouteRanker/facebook-facebook-ios-sdk-397c0b6/build/facebook-ios-sdk.build/Release-iphoneos/facebook-ios-sdk.build/Objects-normal/armv6\"",
+					"\"$(SRCROOT)/RouteRanker/facebook-facebook-ios-sdk-397c0b6/build/facebook-ios-sdk.build/Release-iphoneos/facebook-ios-sdk.build/Objects-normal/armv7\"",
+					"\"$(SRCROOT)/RouteRanker/facebook-facebook-ios-sdk-397c0b6/build/Release-iphoneos\"",
+					"\"$(SRCROOT)/RouteRanker/facebook-facebook-ios-sdk-397c0b6/build/Release-iphonesimulator\"",
+					"\"$(SRCROOT)/RouteRanker/facebook-facebook-ios-sdk-397c0b6/lib/facebook-ios-sdk\"",
+					"\"$(SRCROOT)/RouteRanker/facebook-ios-sdk\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -547,11 +720,22 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
+					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "RouteRanker/RouteRanker-Prefix.pch";
 				INFOPLIST_FILE = "RouteRanker/RouteRanker-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/RouteRanker/facebook-facebook-ios-sdk-397c0b6/build/facebook-ios-sdk.build/Release-iphoneos/facebook-ios-sdk.build/Objects-normal/armv6\"",
+					"\"$(SRCROOT)/RouteRanker/facebook-facebook-ios-sdk-397c0b6/build/facebook-ios-sdk.build/Release-iphoneos/facebook-ios-sdk.build/Objects-normal/armv7\"",
+					"\"$(SRCROOT)/RouteRanker/facebook-facebook-ios-sdk-397c0b6/build/Release-iphoneos\"",
+					"\"$(SRCROOT)/RouteRanker/facebook-facebook-ios-sdk-397c0b6/build/Release-iphonesimulator\"",
+					"\"$(SRCROOT)/RouteRanker/facebook-facebook-ios-sdk-397c0b6/lib/facebook-ios-sdk\"",
+					"\"$(SRCROOT)/RouteRanker/facebook-ios-sdk\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

@@ -92,7 +92,6 @@
     geocoder = [[CLGeocoder alloc] init];
     
     //[toggleButton setTitleColor:[UIColor colorWithRed:(29.0/255.0) green:(199.0/255.0) blue:(34.0/255.0) alpha:1.0] forState:UIControlStateNormal];
-    
 	// Do any additional setup after loading the view, typically from a nib.
 }
 

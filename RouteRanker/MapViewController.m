@@ -9,9 +9,10 @@
 #import "MapViewController.h"
 
 
-#define IGNORE_POINT 3
-#define KALMAN_TIME 1.0
-#define CRUMB_POINTS 5
+#define IGNORE_POINT 5
+#define KALMAN_TIME 0.5
+#define CRUMB_RATE 60
+#define MINIMUM_DELTA_METERS 50.0
 
 @interface MapViewController() {
     
@@ -21,9 +22,7 @@
 @implementation MapViewController
 @synthesize addPinButton, timer;
 @synthesize routes, track, mapTitle;
-@synthesize annotations = _annotations;
-@synthesize locationManager;
-@synthesize map;
+@synthesize locationManager, map;
 @synthesize routeName, currLocation;
 @synthesize filter, estLat, estLong, estCoordinate;
 
@@ -36,26 +35,12 @@
     // STOP
     if(!track)
     {
-        //[routes addObject:currRoute];
-        //double dist = [currRoute getTotalDistanceTraveled];
-        //[map removeOverlay:currRoute];
-       // if (map.annotations) {
-         //   [map removeAnnotations:map.annotations];
-        //}
-        //routeView = nil;
-        //routeName = nil;
-        
         if (currRoute) {
-            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];            
-            NSInteger numRoutes = [prefs integerForKey:@"numRoutes"];
-            numRoutes++;
-            [prefs setInteger:numRoutes forKey:@"numRoutes"];
-            [prefs synchronize];
-            
-            NSManagedObjectContext *context = [(AppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
+            NSManagedObjectContext *context =[(AppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
             RouteData *routeData = [NSEntityDescription insertNewObjectForEntityForName:@"RouteData" inManagedObjectContext:context];
             routeData.owner = [NSNumber numberWithInt: 1];
-            routeData.idNo = [NSNumber numberWithInt: numRoutes];
+            routeData.idNo = [NSNumber numberWithInt: currRoute.idNo];
+            NSLog(@"distance %f", [currRoute getTotalDistanceTraveled]);
             routeData.distance = [NSNumber numberWithDouble:[currRoute getTotalDistanceTraveled]];
             routeData.title = currRoute.name;
             routeData.numAnnotations = [NSNumber numberWithInt: currRoute.numAnnotations];
@@ -81,11 +66,14 @@
                 NSMutableArray *annotationData = [NSMutableArray arrayWithCapacity:currRoute.numAnnotations];
                 id<MKAnnotation> a;
                 for (int i = 0; i < currRoute.numAnnotations; i++) {
-                    AnnotationData *annotation = [NSEntityDescription insertNewObjectForEntityForName:@"AnnnotationData" inManagedObjectContext:context];
+                    AnnotationData *annotation = [NSEntityDescription insertNewObjectForEntityForName:@"AnnotationData" inManagedObjectContext:context];
                     a = [annotations objectAtIndex:i];
-                    annotation.type = [annotation isKindOfClass:[AutoAnnotation class]] ? @"auto" : @"route";
+                    annotation.type = [a isKindOfClass:[AutoAnnotation class]] ? @"auto" : @"route";
                     annotation.title = a.title;
-                    annotation.subtitle = a.subtitle;
+                    if ([a isKindOfClass:[RouteAnnotation class]])
+                        annotation.subtitle = a.subtitle;
+                    else
+                        annotation.subtitle = nil;
                     annotation.latitude = [NSNumber numberWithDouble:a.coordinate.latitude];
                     annotation.longitude = [NSNumber numberWithDouble:a.coordinate.longitude];
                     annotation.route = routeData;
@@ -97,25 +85,50 @@
             }
              
             NSError *error;
+            NSFetchRequest *request = [[NSFetchRequest alloc] init];
+            NSEntityDescription *entity = [NSEntityDescription entityForName:@"RouteData" inManagedObjectContext:context];
+            [request setEntity:entity];
+            // retrive the objects with a given value for a certain property
+            NSPredicate *predicate = [NSPredicate predicateWithFormat: @"title == %@", currRoute.name];
+            [request setPredicate:predicate];
+            NSArray *fetchedRoutes = [context executeFetchRequest:request error:&error];
+            
+            // we have multiple routes now by the same name, let's try to group them together
+            if ([fetchedRoutes count] > 1) {
+                NSFetchRequest *request = [[NSFetchRequest alloc] init];
+                NSEntityDescription *entity = [NSEntityDescription entityForName:@"GroupData" inManagedObjectContext:context];
+                [request setEntity:entity];
+                // retrive the objects with a given value for a certain property
+                NSPredicate *predicate = [NSPredicate predicateWithFormat: @"name == %@", currRoute.name];
+                [request setPredicate:predicate];
+                NSArray *fetchedGroups = [context executeFetchRequest:request error:&error];
+                // there isn't already a group with that name
+                if ([fetchedGroups count] == 0) {
+                    GroupData *newGroup = [NSEntityDescription insertNewObjectForEntityForName:@"GroupData" inManagedObjectContext:context];
+                    newGroup.name = currRoute.name;
+                    newGroup.routes = [[NSSet alloc] initWithArray:fetchedRoutes];                    
+                } else {
+                    // there is already a group with that name, so we add the new one to it
+                    GroupData *group = [fetchedGroups objectAtIndex:0];
+                    NSArray *ar = [group.routes allObjects];
+                    NSMutableArray *newArray = [[NSMutableArray alloc] init];
+                    for (RouteData *r in ar) {
+                        [newArray addObject:r];
+                    }
+                    [newArray addObject:routeData];
+                    group.routes = [[NSSet alloc] initWithArray:newArray];
+                }
+            }
+            
             if (![context save:&error]) {
                 NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
             }
-            
-        
-            NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-            NSEntityDescription *entity = [NSEntityDescription entityForName:@"RouteData"
-                                                  inManagedObjectContext:context];
-            [fetchRequest setEntity:entity];
-            NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest error:&error];
-            for (RouteData *route in fetchedObjects) {
-                NSLog(@"Title: %@", route.title);
-                NSLog(@"Distance: %f", [route.distance doubleValue]);
-                NSLog(@"routeID: %d", [route.idNo intValue]);
-            }
+
         }
         
         free_filter(filter);
         numPoints = 0;
+        timerCounter = 0;
         [timer invalidate];
         viewedInMap = NO;
     }
@@ -126,7 +139,6 @@
         }
         [map removeOverlay:currRoute];
         currRoute = nil;
-        _annotations = nil;
         routeView = nil;
         routeName = nil;
         filter = alloc_filter_velocity2d(1.0);
@@ -137,9 +149,16 @@
                         
 - (void) kalmanUpdate {
     if (numPoints >= IGNORE_POINT) {
+        timerCounter++;
         if (!currRoute)
         {
             currRoute = [[Route alloc] initWithStartPoint:currLocation];
+            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];            
+            NSInteger numRoutes = [prefs integerForKey:@"numRoutes"];
+            numRoutes++;
+            [prefs setInteger:numRoutes forKey:@"numRoutes"];
+            [prefs synchronize];
+            currRoute.idNo = numRoutes;
             if (!routeName) {
                 CLGeocoder *geocoder = [[CLGeocoder alloc] init];
                 [geocoder reverseGeocodeLocation: currLocation completionHandler: 
@@ -159,15 +178,15 @@
         //if([currLocation distanceFromLocation:prevLocation] < (100 * KALMAN_TIME))
         //{
             update_velocity2d(filter, currLocation.coordinate.latitude, currLocation.coordinate.longitude, KALMAN_TIME);
-            if (numPoints % CRUMB_POINTS == 0 && currLocation.coordinate.latitude != prevLocation.coordinate.latitude && currLocation.coordinate.longitude != prevLocation.coordinate.longitude) {
+            if (timerCounter % CRUMB_RATE == 0 && [currLocation distanceFromLocation:prevLocation] >= MINIMUM_DELTA_METERS) {
                 NSDate* today = [NSDate date];
                 AutoAnnotation* autoAnnotation = [[AutoAnnotation alloc] initWithCoordinateAndTime: estCoordinate :today];
                 [currRoute addAnnotation:autoAnnotation];
                 [map addAnnotation:autoAnnotation];
             }
         //} else {
-        //    update_velocity2d(filter, prevLocation.coordinate.latitude, prevLocation.coordinate.longitude, KALMAN_TIME);            
-        //}
+           // update_velocity2d(filter, prevLocation.coordinate.latitude, prevLocation.coordinate.longitude, KALMAN_TIME);            
+       // }
         get_lat_long(filter, &estLat ,&estLong);
         estCoordinate.latitude = estLat;
         estCoordinate.longitude = estLong;
@@ -216,6 +235,7 @@
     map.delegate = self;
     //viewedInMap = NO;
     numPoints = 0;
+    timerCounter = 0;
     if (currRoute) {
         [map addOverlay:currRoute];
     }
@@ -242,7 +262,6 @@
         if (!viewedInMap) {
             MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(currLocation.coordinate, 2000, 2000);
             [map setRegion:region animated:YES];
-            _annotations = [NSMutableArray arrayWithCapacity:20];
             viewedInMap = YES;
         }
     } else {
@@ -259,11 +278,6 @@
     
 }
 
--(void)setAnnotations:(NSMutableArray *)annotations
-{
-    _annotations = annotations;
-}
-
 - (void)viewDidUnload {
     [self setMapTitle:nil];
     [self setAddPinButton:nil];
@@ -278,7 +292,7 @@
         {
             if(!prevLocation)
                 prevLocation = currLocation;
-            if([newLocation distanceFromLocation:prevLocation] < 100 *KALMAN_TIME)
+            if([newLocation distanceFromLocation:prevLocation] < 100 * KALMAN_TIME)
                 prevLocation = currLocation;
             currLocation = newLocation; 
         }
@@ -332,7 +346,6 @@
         (MKAnnotationView *)[map dequeueReusableAnnotationViewWithIdentifier:AutoAnnotationIdentifier];
         if (!annotationView)
         {
-            
             MKAnnotationView *annotationView = [[MKAnnotationView alloc] initWithAnnotation:annotation
                                                                              reuseIdentifier:AutoAnnotationIdentifier];
             annotationView.canShowCallout = YES;
@@ -349,6 +362,18 @@
         return nil;
     }
 }
-    
+
+#pragma mark - ReviewRoutesTableViewControllerDelegate
+- (void)myRoutesTableViewControllerDidFinish:(MyRoutesTableViewController *)controller
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    UINavigationController *navigationController = segue.destinationViewController;
+    MyRoutesTableViewController *myRoutesTableViewController = [[navigationController viewControllers] objectAtIndex:0];
+    myRoutesTableViewController.delegate = self;
+}
 
 @end

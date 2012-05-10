@@ -7,39 +7,107 @@
 //
 
 #import "AppDelegate.h"
-#import "FirstViewController.h"
-#import "MapViewController.h"
 
-@implementation AppDelegate
+@implementation AppDelegate 
 
+@synthesize facebook = _facebook;
+@synthesize friendNames = _friendNames;
 @synthesize window = _window;
 @synthesize tabBarController = _tabBarController;
 @synthesize managedObjectContext = __managedObjectContext;
 @synthesize managedObjectModel = __managedObjectModel;
 @synthesize persistentStoreCoordinator = __persistentStoreCoordinator;
 
+- (void)request:(FBRequest *)request didLoad:(id)result {
+    if ([request.url isEqualToString:@"https://graph.facebook.com/me/friends"]) {    
+        NSArray *friendsArray = [(NSDictionary*)result objectForKey:@"data"];
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        [prefs setObject:friendsArray forKey:@"friends"];
+    }
+}
+
+- (void)requestLoading:(FBRequest *)request {
+    
+}
+
+- (void)request:(FBRequest *)request didReceiveResponse:(NSURLResponse *)response {
+    
+}
+
+- (void)fbDidNotLogin:(BOOL)cancelled {
+    
+}
+
+- (void)fbDidLogout {
+    
+}
+
+- (void)fbSessionInvalidated {
+    
+}
+
+- (void)fbDidExtendToken:(NSString*)accessToken
+               expiresAt:(NSDate*)expiresAt {
+    
+}
+
+- (void)request:(FBRequest *)request didLoadRawResponse:(NSData *)data {
+    
+}
+
+
+
+- (void)request:(FBRequest *)request didFailWithError:(NSError *)error {
+    NSLog(@"Uh oh, request failure.");
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {    
     // Override point for customization after application launch.
     tabBarController = [[UITabBarController alloc] init];
-    
-    /*UITabBarItem *item1 = [[UITabBarItem alloc] initWithTitle:@"Home" image:nil tag:0];
-    UITabBarItem *item2 = [[UITabBarItem alloc] initWithTitle:@"Review" image:nil tag:1];
-    UITabBarItem *item3 = [[UITabBarItem alloc] initWithTitle:@"Compare" image:nil tag:2];
-    UITabBarItem *item4 = [[UITabBarItem alloc] initWithTitle:@"Share" image:nil tag:3];
-    NSArray* items = [NSArray arrayWithObjects: item1, item2, item3, item4, nil];
-    [tabBarController setItems:items];  */
     FirstViewController* vc1 = [[FirstViewController alloc] init];
     MapViewController *mapView = [[MapViewController alloc] init]; 
     mapView.managedObjectContext = self.managedObjectContext;
-    UIViewController * vc2 = [[UIViewController alloc] init];
-    UIViewController* vc3 = [[UIViewController alloc] init];
+    ReviewTVC * vc2 = [[ReviewTVC alloc] init];
+    ShareTableViewController* vc3 = [[ShareTableViewController alloc] init];
     NSArray* controllers = [NSArray arrayWithObjects: vc1,mapView, vc2,vc3, nil];
     tabBarController.viewControllers = controllers;
     //mapView.managedObjectContext = self.managedObjectContext;
 
     window.rootViewController = tabBarController;
+    
+    facebook = [[Facebook alloc] initWithAppId:@"266592116761408" andDelegate:self];
+    
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if ([defaults objectForKey:@"FBAccessTokenKey"] 
+        && [defaults objectForKey:@"FBExpirationDateKey"]) {
+        facebook.accessToken = [defaults objectForKey:@"FBAccessTokenKey"];
+        facebook.expirationDate = [defaults objectForKey:@"FBExpirationDateKey"];
+        [facebook requestWithGraphPath:@"me/friends" andDelegate:self];
+    }
+        
+    if (![facebook isSessionValid]) {
+        [facebook authorize:nil];
+    }
     return YES;
+}
+
+
+// For iOS 4.2+ support
+//Add the application:handleOpenURL: and application:openURL: methods with a call to the facebook instance:
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+    return [facebook handleOpenURL:url];
+}
+
+//save the user's credentials specifically the access token and corresponding expiration date
+- (void)fbDidLogin {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:[facebook accessToken] forKey:@"FBAccessTokenKey"];
+    [defaults setObject:[facebook expirationDate] forKey:@"FBExpirationDateKey"];
+    [defaults synchronize];
+    [facebook requestWithGraphPath:@"me/friends" andDelegate:self];
 }
 							
 - (void)applicationWillResignActive:(UIApplication *)application

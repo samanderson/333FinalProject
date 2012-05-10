@@ -10,97 +10,98 @@
 
 @implementation Group
 
-@synthesize avgDist = _avgDist;
-@synthesize avgSpeed = _avgSpeed;
-@synthesize totalTime = _totalTime;
-@synthesize times = _times;
+@synthesize routes = _routes;
 @synthesize groupName = _groupName;
-@synthesize routeNames = _routeNames;
+@synthesize totalTime, totalDist, avgDist, avgSpeed, avgTime, numRoutes;
+@synthesize unit;
+@synthesize routeNames, routeTimes, routeDistances, shortestTime, longestTime, longestDist, shortestDist;
 
--(id) initWithName: (NSString *) name
+-(id) initWithGroupData:(GroupData *)group
 {
     self = [super init];
-    if(self)
+    if (self)
     {
-        self.groupName = name;
-        self.times = [[NSMutableArray alloc] init ];
-        self.routeNames = [[NSMutableArray alloc] init];
-        self.avgDist = 0.0;
-        self.avgSpeed = 0.0;
-    }
+        self.groupName = group.name;
+        self.routes = [group.routes allObjects];
+        numRoutes = [self.routes count];
+        double time = 0.0, dist = 0.0, maxDist = 0.0, minDist = -1.0;
+        double minTime = -1.0, maxTime = 0.0, d, t;
+        routeDistances = [[NSMutableArray alloc] init];
+        routeNames = [[NSMutableArray alloc] init];
+        routeTimes = [[NSMutableArray alloc] init];
+        for (RouteData *route in self.routes) {
+            d = [route.distance doubleValue]/1000;
+            t = [route.time doubleValue];
+            time += t;
+            dist += d;
+            if (d > maxDist)
+                maxDist = d;
+            if (minDist == -1.0 || d < minDist)
+                minDist = d;
+            if (minTime == -1.0 || t < minTime)
+                minTime = t;
+            if (t > maxTime)
+                maxTime = t;
+            [routeDistances addObject:route.distance];
+            [routeTimes addObject:route.time];
+            [routeNames addObject:route.title];
+        }
+        totalTime = time;
+        totalDist = dist;
+        if (numRoutes != 0) {
+            avgDist = totalDist / numRoutes;
+            avgTime = totalTime / numRoutes;
+            avgSpeed = avgDist / avgTime * 360;
+            shortestDist = minDist;
+            shortestTime = minTime;
+        }   
+        else {
+            avgDist = 0;
+            avgTime = 0;
+            avgSpeed = 0;
+            shortestDist = 0;
+            shortestTime = 0;
+        }
+        longestTime = maxTime;
+        longestDist = maxDist;
+        unit = @"km";
+        //NSLog(@"avgDist %f", avgDist);
+        }
     return self;
 }
 
--(void) addRoute: (Route *) route
+-(void) convertFromMetric
 {
-    double time = [route getTotalTimeElapsed];
-    double dist = [route getTotalDistanceTraveled];
-    int numRoutes = [self.routeNames count];
-    double totalDistance = numRoutes * self.avgDist + dist;
-    self.totalTime += time;
-    [self.routeNames addObject:route.name];
-    [self.times addObject:[[NSNumber alloc] initWithDouble:time]];
-    self.avgDist = totalDistance / (numRoutes + 1);
-    self.avgSpeed = totalDistance/ self.totalTime;
+    double distance = 0.0;
+    totalDist *= 0.621371192;
+    avgSpeed *= 0.621371192;
+    avgDist *= 0.621371192;
+    shortestDist *= 0.621371192;
+    longestDist *= 0.621371192;
+    for(int i = 0; i < numRoutes; i++)
+    {
+        distance = [[routeDistances objectAtIndex:i ] doubleValue];
+        distance *= 0.621371192;
+        [routeDistances replaceObjectAtIndex:i withObject:[NSNumber numberWithDouble:distance]];
+    }
+    unit = @"miles";
 }
 
--(void) removeRoute: (Route *) route
+-(void) convertToMetric 
 {
-    double timeElapsed = [route getTotalTimeElapsed];
-    double dist = [route getTotalDistanceTraveled];
-    int numRoutes = [self.routeNames count];
-    NSNumber * time = [[NSNumber alloc] initWithDouble:timeElapsed];
-    for(NSString * s in self.routeNames)
+    double distance = 0.0;
+    totalDist /= 0.621371192;
+    avgSpeed /= 0.621371192;
+    avgDist /= 0.621371192;
+    shortestDist /= 0.621371192;
+    longestDist /= 0.621371192;
+    for(int i = 0; i < numRoutes; i++)
     {
-        if([s isEqualToString:route.name])
-        {
-            [self.routeNames removeObject:s];
-            break;
-        }
+        distance = [[routeDistances objectAtIndex:i ] doubleValue];
+        distance /= 0.621371192;
+        [routeDistances replaceObjectAtIndex:i withObject:[NSNumber numberWithDouble:distance]];
     }
-    for(NSNumber * t in self.times)
-    {
-        
-        if([t isEqualToNumber:time])
-        {
-            [self.times removeObject:t];
-            break;
-        } 
-    }
-    self.totalTime -= timeElapsed;
-    self.avgDist = (self.avgDist * numRoutes - dist)/ (numRoutes -1);
-    self.avgSpeed = self.avgDist * (numRoutes -1) / self.totalTime;
-}
--(double) getAvgMPH
-{
-    return (self.avgSpeed * 2.23693629);
-}
-
--(double) getAvgMiles
-{
-    return (self.avgDist * 0.000621371192);
-}
-
--(double) getShortestTime
-{
-    double smallest = [[self.times objectAtIndex:0] doubleValue];
-    for(NSNumber * t in self.times)
-    {
-        if(smallest > [t doubleValue])
-            smallest = [t doubleValue];
-    }
-    return smallest;
-}
-
--(double) getLongestTime
-{
-    double longest = [[self.times objectAtIndex:0] doubleValue];
-    for(NSNumber * t in self.times)
-    {
-        if(longest < [t doubleValue])
-            longest = [t doubleValue];
-    }
-    return longest;
+    unit = @"km";
 }
 
 @end

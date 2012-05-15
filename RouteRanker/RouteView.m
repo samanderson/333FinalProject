@@ -2,8 +2,7 @@
 //  RouteView.m
 //  RouteRanker
 //
-//  Created by Chuck Anderson on 4/11/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+// We used Apple's Breadcrumb class CrumbPathView.m to help write this file and figure out how to display routes. 
 //
 
 #import "RouteView.h"

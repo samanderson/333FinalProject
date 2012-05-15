@@ -18,8 +18,8 @@
 @interface EditRouteViewController : UITableViewController <UITextFieldDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *nameTextField;
-@property (weak, nonatomic) IBOutlet UITextField *startLocationTextField;
-@property (weak, nonatomic) IBOutlet UITextField *endLocationTextField;
+@property (weak, nonatomic) IBOutlet UILabel *startLocationTextLabel;
+@property (weak, nonatomic) IBOutlet UILabel *endLocationTextLabel;
 @property (strong, nonatomic) RouteData *routeData;
 @property UIGestureRecognizer *tapRecognizer;
 @property (nonatomic) id <EditRouteViewControllerDelegate> delegate;

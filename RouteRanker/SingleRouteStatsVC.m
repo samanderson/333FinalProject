@@ -73,7 +73,6 @@
         [prefs setObject:@"miles" forKey:@"units"];
         if(![self.firstGroup.unit isEqualToString:@"miles"])
         {
-            NSLog(@"converting...");
             [self.firstGroup convertFromMetric];
             [self viewWillAppear:YES];
         }
@@ -83,7 +82,6 @@
         [prefs setObject:@"km" forKey:@"units"];
         if(![self.firstGroup.unit isEqualToString:@"km"])
         {
-            NSLog(@"converting...");
             [self.firstGroup convertToMetric];
             [self viewWillAppear:YES];
         }

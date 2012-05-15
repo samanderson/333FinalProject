@@ -51,10 +51,10 @@
         if (numRoutes != 0) {
             avgDist = totalDist / numRoutes;
             avgTime = totalTime / numRoutes;
-            avgSpeed = avgDist / avgTime * 360;
+            avgSpeed = avgDist / avgTime * 3600;
             shortestDist = minDist;
             shortestTime = minTime;
-        }   
+        }
         else {
             avgDist = 0;
             avgTime = 0;

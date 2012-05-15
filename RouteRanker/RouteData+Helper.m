@@ -19,4 +19,10 @@
     return mapPointData.timestamp;
 }
 
+-(int) routeCompare: (RouteData *)routeData {
+    NSDate *thisDate = [self getStartTimeDate];
+    NSDate *thatDate = [routeData getStartTimeDate];
+    return [thatDate compare:thisDate];
+}
+
 @end

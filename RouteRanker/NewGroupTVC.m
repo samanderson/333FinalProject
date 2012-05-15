@@ -41,7 +41,7 @@
     [fetchRequest setEntity:entity];
     NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest error:&error];
     self.routeList = [[NSArray alloc] initWithArray:fetchedObjects];
-    
+    self.routeList = [self.routeList sortedArrayUsingSelector:@selector(routeCompare:)];
     self.routes = [[NSMutableArray alloc] init];
     includeRoute = [[NSMutableArray alloc] init];
     for (int i = 0; i < [self.routeList count]; i++) { 
@@ -55,7 +55,7 @@
 {
     [super viewDidLoad];
     
-    UIBarButtonItem* createButton = [[UIBarButtonItem alloc] initWithTitle:@"Save Group" style:UIBarButtonItemStylePlain
+    UIBarButtonItem* createButton = [[UIBarButtonItem alloc] initWithTitle:@"Save" style:UIBarButtonItemStyleDone
                                                                     target:self 
                                                                     action:@selector(createGroupButtonPressed:)];
     self.navigationItem.rightBarButtonItem = createButton;
@@ -99,12 +99,20 @@
     }
     RouteData *route = [self.routeList objectAtIndex:indexPath.row];
     cell.textLabel.text = route.title;
-    //cell.detailTextLabel.text = [NSString stringWithFormat:@"%.2f km", [route.distance doubleValue]];
-    NSDateFormatter *format = [[NSDateFormatter alloc] init];
-    [format setDateFormat:@"MMM dd, yyyy h:mm a"];
-    NSString *dateString = [format stringFromDate:[route getStartTimeDate]];
-    cell.detailTextLabel.text = dateString;
-
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    NSString * myName = [prefs stringForKey:@"myName"];
+    
+    if ([route.ownerName isEqualToString:myName]) {
+        NSDateFormatter *format = [[NSDateFormatter alloc] init];
+        [format setDateFormat:@"MMM dd, yyyy h:mm a"];
+        NSString *dateString = [format stringFromDate:[route getStartTimeDate]];
+        cell.detailTextLabel.text = dateString;
+    }
+    else
+    {
+        cell.detailTextLabel.text = route.ownerName;
+    }
+    
     return cell;
 }
 

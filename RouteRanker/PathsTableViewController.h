@@ -10,6 +10,7 @@
 #import "ShareTableViewController.h"
 #import "AppDelegate.h"
 #import "FacebookFriend.h"
+#import "clientRest.h"
 
 @interface PathsTableViewController : UITableViewController
 {

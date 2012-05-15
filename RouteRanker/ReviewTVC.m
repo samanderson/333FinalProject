@@ -223,6 +223,7 @@
         newGroupController.groupName = self.groupName;
     
         [[self navigationController] pushViewController:newGroupController animated:YES];
+        NSLog(@"%@", [self navigationController]);
     }
 }
 

@@ -9,13 +9,16 @@
 #import "MapViewController.h"
 
 
-#define IGNORE_POINT 5
+#define IGNORE_POINT 6
 #define KALMAN_TIME 0.5
-#define CRUMB_RATE 60
-#define MINIMUM_DELTA_METERS 50.0
+#define CRUMB_RATE 4
+#define MINIMUM_DELTA_METERS 25.0
 
 @interface MapViewController() {
-    
+    CLLocation *prevCrumbLocation;
+    double timeBetween;
+    int ignoreAgain;
+   // int numCrazyInARow;
 }
 @end
 
@@ -28,19 +31,38 @@
 
 @synthesize managedObjectContext, fetchedResultsController;
 
-
-
 - (void) toggleTracking {
     track = !track;
     // STOP
     if(!track)
     {
         if (currRoute) {
+            CLLocationCoordinate2D firstCoord = MKCoordinateForMapPoint(currRoute.points[0]);
+            CLLocationCoordinate2D lastCoord = MKCoordinateForMapPoint(currRoute.points[currRoute.numPoints - 1]);
+            CLLocation *first = [[CLLocation alloc] initWithLatitude: firstCoord.latitude longitude:firstCoord.longitude];
+            CLLocation *last = [[CLLocation alloc] initWithLatitude: lastCoord.latitude longitude:lastCoord.longitude];
+            CLGeocoder *geocoder = [[CLGeocoder alloc] init];
+            CLGeocoder *geocoder2 = [[CLGeocoder alloc] init];
+                 
+            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
             NSManagedObjectContext *context =[(AppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
             RouteData *routeData = [NSEntityDescription insertNewObjectForEntityForName:@"RouteData" inManagedObjectContext:context];
-            routeData.owner = [NSNumber numberWithInt: 1];
+            
+            [geocoder reverseGeocodeLocation: first completionHandler: 
+             ^(NSArray *placemarks, NSError *error) {
+                 CLPlacemark *placemark = [placemarks objectAtIndex:0];
+                 routeData.startLocation = [NSString stringWithFormat:@"%@, %@", placemark.thoroughfare, placemark.locality];
+             }];
+            
+            [geocoder2 reverseGeocodeLocation: last completionHandler: 
+             ^(NSArray *placemarks, NSError *error) {
+                 CLPlacemark *placemark = [placemarks objectAtIndex:0];
+                 routeData.endLocation = [NSString stringWithFormat:@"%@, %@",placemark.thoroughfare, placemark.locality];
+             }];
+            
+            routeData.ownerID = [prefs stringForKey:@"myID"];
+            routeData.ownerName = [prefs stringForKey:@"myName"];
             routeData.idNo = [NSNumber numberWithInt: currRoute.idNo];
-            NSLog(@"distance %f", [currRoute getTotalDistanceTraveled]);
             routeData.distance = [NSNumber numberWithDouble:[currRoute getTotalDistanceTraveled]];
             routeData.title = currRoute.name;
             routeData.numAnnotations = [NSNumber numberWithInt: currRoute.numAnnotations];
@@ -61,25 +83,28 @@
             }
             routeData.points = [NSSet setWithArray:mapPoints];
 
+            clientRest* client = [[clientRest alloc] init];
+            NSString* idOwner = routeData.ownerID;
+            int routeNumber = [routeData.idNo intValue];
+            [client addPath:currRoute withId:routeNumber ofUser:idOwner];
+
             if (currRoute.annotations) {
                 NSMutableArray *annotations = currRoute.annotations;
-                NSMutableArray *annotationData = [NSMutableArray arrayWithCapacity:currRoute.numAnnotations];
-                id<MKAnnotation> a;
-                for (int i = 0; i < currRoute.numAnnotations; i++) {
-                    AnnotationData *annotation = [NSEntityDescription insertNewObjectForEntityForName:@"AnnotationData" inManagedObjectContext:context];
-                    a = [annotations objectAtIndex:i];
-                    annotation.type = [a isKindOfClass:[AutoAnnotation class]] ? @"auto" : @"route";
-                    annotation.title = a.title;
+                NSMutableArray *annotationsData = [NSMutableArray arrayWithCapacity:currRoute.numAnnotations];
+                for (id<MKAnnotation> a in annotations) {
+                    AnnotationData *annotationData = [NSEntityDescription insertNewObjectForEntityForName:@"AnnotationData" inManagedObjectContext:context];
+                    annotationData.type = [a isKindOfClass:[AutoAnnotation class]] ? @"auto" : @"route";
+                    annotationData.title = a.title;
                     if ([a isKindOfClass:[RouteAnnotation class]])
-                        annotation.subtitle = a.subtitle;
+                        annotationData.subtitle = a.subtitle;
                     else
-                        annotation.subtitle = nil;
-                    annotation.latitude = [NSNumber numberWithDouble:a.coordinate.latitude];
-                    annotation.longitude = [NSNumber numberWithDouble:a.coordinate.longitude];
-                    annotation.route = routeData;
-                    [annotationData addObject:annotation];
+                        annotationData.subtitle = nil;
+                    annotationData.latitude = [NSNumber numberWithDouble:a.coordinate.latitude];
+                    annotationData.longitude = [NSNumber numberWithDouble:a.coordinate.longitude];
+                    annotationData.route = routeData;
+                    [annotationsData addObject:annotationData];
                 }
-                routeData.annotations = [NSSet setWithArray:annotationData];
+                routeData.annotations = [NSSet setWithArray:annotationsData];
             } else {
                 routeData.annotations = nil;
             }
@@ -128,9 +153,13 @@
         
         free_filter(filter);
         numPoints = 0;
+        ignoreAgain= 0;
         timerCounter = 0;
         [timer invalidate];
         viewedInMap = NO;
+        currLocation = nil;
+        prevLocation = nil;
+        prevCrumbLocation = nil;
     }
     // START
     else {
@@ -141,6 +170,10 @@
         currRoute = nil;
         routeView = nil;
         routeName = nil;
+        numPoints = 0;
+        ignoreAgain = 0;
+        timerCounter = 0;
+        
         filter = alloc_filter_velocity2d(1.0);
         timer = [NSTimer scheduledTimerWithTimeInterval:KALMAN_TIME target:self selector:@selector(kalmanUpdate) userInfo:nil repeats:YES];
     }
@@ -148,10 +181,11 @@
 }
                         
 - (void) kalmanUpdate {
-    if (numPoints >= IGNORE_POINT) {
+    if (numPoints >= IGNORE_POINT && ignoreAgain >= IGNORE_POINT) {
         timerCounter++;
         if (!currRoute)
         {
+            NSLog(@"HELLO");
             currRoute = [[Route alloc] initWithStartPoint:currLocation];
             NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];            
             NSInteger numRoutes = [prefs integerForKey:@"numRoutes"];
@@ -174,29 +208,28 @@
                 [map addOverlay:currRoute];
             }
         }
-        //NSLog(@"Distance between points %f", [currLocation distanceFromLocation:prevLocation]);
-        //if([currLocation distanceFromLocation:prevLocation] < (100 * KALMAN_TIME))
-        //{
+        NSLog(@"Distance between points %f", [currLocation distanceFromLocation:prevLocation]);
+        //if(//(prevCrumbLocation && ([currLocation distanceFromLocation:prevCrumbLocation] < (100 * KALMAN_TIME) && [currLocation distanceFromLocation:prevCrumbLocation] != -1)) || (!prevCrumbLocation &&([currLocation distanceFromLocation:prevLocation] < (100 * KALMAN_TIME) && [currLocation distanceFromLocation:prevLocation] != -1)))
+        timeBetween = [currLocation.timestamp timeIntervalSinceDate:prevLocation.timestamp];
+        if(([currLocation distanceFromLocation:prevLocation] < (100 * timeBetween) && [currLocation distanceFromLocation:prevLocation] != -1))
+        {
             update_velocity2d(filter, currLocation.coordinate.latitude, currLocation.coordinate.longitude, KALMAN_TIME);
-            if (timerCounter % CRUMB_RATE == 0 && [currLocation distanceFromLocation:prevLocation] >= MINIMUM_DELTA_METERS) {
+            if (timerCounter % CRUMB_RATE == 0 && (!prevCrumbLocation || [currLocation distanceFromLocation:prevCrumbLocation] >= MINIMUM_DELTA_METERS)) {
                 NSDate* today = [NSDate date];
                 AutoAnnotation* autoAnnotation = [[AutoAnnotation alloc] initWithCoordinateAndTime: estCoordinate :today];
                 [currRoute addAnnotation:autoAnnotation];
                 [map addAnnotation:autoAnnotation];
+                prevCrumbLocation = currLocation;
             }
-        //} else {
-           // update_velocity2d(filter, prevLocation.coordinate.latitude, prevLocation.coordinate.longitude, KALMAN_TIME);            
-       // }
+            //prevCrumbLocation = currLocation;
+
+        } else {
+            update_velocity2d(filter, prevLocation.coordinate.latitude, prevLocation.coordinate.longitude, KALMAN_TIME);            
+        }
         get_lat_long(filter, &estLat ,&estLong);
         estCoordinate.latitude = estLat;
         estCoordinate.longitude = estLong;
         MKMapRect updateRect = [currRoute addEstimatedPoint:currLocation withEstimatedCoordinate:estCoordinate];
-        //moved so it would not add a crumb on an outlier point. 
-        /*if (numPoints % CRUMB_POINTS == 0 && currLocation.coordinate.latitude != prevLocation.coordinate.latitude && currLocation.coordinate.longitude != prevLocation.coordinate.longitude) {
-            NSDate* today = [NSDate date];
-            AutoAnnotation* autoAnnotation = [[AutoAnnotation alloc] initWithCoordinateAndTime: estCoordinate :today];
-            [map addAnnotation:autoAnnotation];
-        }*/
         if(!MKMapRectIsNull(updateRect))
         {
             MKZoomScale currentZoomScale = (CGFloat)(map.bounds.size.width /map.visibleMapRect.size.width);
@@ -234,8 +267,11 @@
     [super viewDidLoad];
     map.delegate = self;
     //viewedInMap = NO;
-    numPoints = 0;
-    timerCounter = 0;
+    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:@"Map" style:UIBarButtonItemStylePlain target:nil action:nil];
+    self.navigationItem.backBarButtonItem = backButton;
+    //numPoints = 0;
+    
+    //timerCounter = 0;
     if (currRoute) {
         [map addOverlay:currRoute];
     }
@@ -246,7 +282,7 @@
     if (track) {
         addPinButton.enabled = YES;
         if (routeName)
-            mapTitle.title = routeName;
+            self.navigationItem.title = routeName;
         else {
             CLGeocoder *geocoder = [[CLGeocoder alloc] init];
             [geocoder reverseGeocodeLocation: currLocation completionHandler: 
@@ -287,13 +323,41 @@
 - (void) locationManager:(CLLocationManager *) manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {   
     numPoints++;
-    if (newLocation && numPoints >= IGNORE_POINT) {
+    ignoreAgain ++;
+    if(prevLocation)
+    {
+        timeBetween = [newLocation.timestamp timeIntervalSinceDate: prevLocation.timestamp];
+        if(timeBetween > 15 && ignoreAgain > IGNORE_POINT + 2)
+            ignoreAgain = 0;
+        NSLog(@"timeBetween %f:", timeBetween);
+    }
+    if (newLocation && numPoints >= IGNORE_POINT && ignoreAgain >= IGNORE_POINT) {
         if((oldLocation.coordinate.latitude != newLocation.coordinate.latitude) && (oldLocation.coordinate.longitude != newLocation.coordinate.longitude))
         {
-            if(!prevLocation)
+            if(!prevLocation){
+                NSLog(@"Set previous");
+                //numCrazyInARow = 0;
                 prevLocation = currLocation;
-            if([newLocation distanceFromLocation:prevLocation] < 100 * KALMAN_TIME)
+            }
+            else if([newLocation distanceFromLocation:prevLocation] < 100 * timeBetween)
+            {
+                NSLog(@"Update previous");
+                //numCrazyInARow = 0;
                 prevLocation = currLocation;
+            }
+            else 
+            {
+                //ignoreAgain = 0;
+            }
+            /*else{
+                numCrazyInARow++;
+            }
+            //if(numCrazyInARow == 10){
+                NSLog(@"I must be crazy");
+                prevLocation = currLocation;
+                numCrazyInARow = 0;
+            }*/
+             NSLog(@"Update newCurr");
             currLocation = newLocation; 
         }
     }
@@ -364,6 +428,7 @@
 }
 
 #pragma mark - ReviewRoutesTableViewControllerDelegate
+/*
 - (void)myRoutesTableViewControllerDidFinish:(MyRoutesTableViewController *)controller
 {
     [self dismissViewControllerAnimated:YES completion:nil];
@@ -375,5 +440,10 @@
     MyRoutesTableViewController *myRoutesTableViewController = [[navigationController viewControllers] objectAtIndex:0];
     myRoutesTableViewController.delegate = self;
 }
+ */
 
+- (IBAction)viewRoutes:(id)sender {
+    MyRoutesTableViewController *myRoutesTableViewController = [MyRoutesTableViewController alloc];
+    [[self navigationController] pushViewController:myRoutesTableViewController animated:YES];
+}
 @end

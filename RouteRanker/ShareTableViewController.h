@@ -13,6 +13,7 @@
 #import "FBConnect.h"
 #import "FBRequest.h"
 #import "FacebookFriend.h"
+#import "getPathsTVC.h"
 
 @interface ShareTableViewController : UITableViewController <FBSessionDelegate, FBRequestDelegate>
 {

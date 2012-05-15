@@ -2,7 +2,7 @@
 //  RouteData.m
 //  RouteRanker
 //
-//  Created by Chuck Anderson on 5/7/12.
+//  Created by Chuck Anderson on 5/10/12.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
@@ -19,12 +19,13 @@
 @dynamic idNo;
 @dynamic numAnnotations;
 @dynamic numPoints;
-@dynamic owner;
+@dynamic ownerID;
 @dynamic startLocation;
 @dynamic time;
 @dynamic title;
+@dynamic ownerName;
 @dynamic annotations;
-@dynamic points;
 @dynamic group;
+@dynamic points;
 
 @end

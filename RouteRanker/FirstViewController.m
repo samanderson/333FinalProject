@@ -7,6 +7,7 @@
 //
 
 #import "FirstViewController.h"
+#import "MapViewController.h"
 
 @interface FirstViewController ()
 
@@ -80,14 +81,16 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self setTrackDelegate:[self.tabBarController.viewControllers objectAtIndex: 1]];
+    UINavigationController *ui = [self.tabBarController.viewControllers objectAtIndex: 1];
+
+    [self setTrackDelegate:[ui.viewControllers objectAtIndex: 0]];
     routeNameText.delegate = self;
     tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTap:)];
     tapRecognizer.enabled = NO;
     [self.view addGestureRecognizer:tapRecognizer];
     
     locationManager = [[CLLocationManager alloc] init];
-    [self setLocationDelegate:[self.tabBarController.viewControllers objectAtIndex: 1]]; 
+    [self setLocationDelegate:[ui.viewControllers objectAtIndex: 0]]; 
     locationManager.delegate = locationDelegate;
     geocoder = [[CLGeocoder alloc] init];
     

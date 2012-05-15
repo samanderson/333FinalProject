@@ -11,5 +11,5 @@
 @interface RouteData (Helper)
 
 - (NSDate *)getStartTimeDate;
-
+-(int) routeCompare: (RouteData *)routeData;
 @end

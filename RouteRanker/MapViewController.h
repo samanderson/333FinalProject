@@ -20,8 +20,9 @@
 #import "AnnotationData.h"
 #import "AppDelegate.h"
 #import "MyRoutesTableViewController.h"
+#import "clientRest.h"
 
-@interface MapViewController : UIViewController <ToggleTracking,MKMapViewDelegate, CLLocationManagerDelegate, NSFetchedResultsControllerDelegate, MyRoutesTableViewControllerDelegate>
+@interface MapViewController : UIViewController <ToggleTracking,MKMapViewDelegate, CLLocationManagerDelegate, NSFetchedResultsControllerDelegate>
 {
     BOOL track;
     NSString *routeName;
@@ -52,6 +53,8 @@
 @property (nonatomic, retain)CLLocationManager *locationManager;
 @property (nonatomic, retain) NSManagedObjectContext* managedObjectContext;
 @property (nonatomic, retain) NSFetchedResultsController *fetchedResultsController;
+
+- (IBAction)viewRoutes:(id)sender;
 
 
 -(void) updateUserLocation;

@@ -20,10 +20,17 @@
 @implementation EditRouteViewController
 
 @synthesize nameTextField;
-@synthesize startLocationTextField;
-@synthesize endLocationTextField;
+@synthesize startLocationTextLabel;
+@synthesize endLocationTextLabel;
 @synthesize routeData;
 @synthesize delegate, tapRecognizer;
+
+- (IBAction)scroll:(id)sender {
+    NSLog(@"called");
+    NSUInteger *path = malloc(sizeof(NSUInteger)*2); path[0] = 2; path[1] = 0;
+     [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathWithIndexes:path length:2] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+}
+
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -37,12 +44,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.nameTextField.text = routeData.title;
-    self.startLocationTextField.text = routeData.startLocation;
-    self.endLocationTextField.text = routeData.endLocation;
     self.nameTextField.delegate = self;
-    self.startLocationTextField.delegate = self;
-    self.endLocationTextField.delegate = self;
     tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTap:)];
     tapRecognizer.enabled = NO;
     [self.view addGestureRecognizer:tapRecognizer];
@@ -51,8 +53,8 @@
 - (void)viewDidUnload
 {
     [self setNameTextField:nil];
-    [self setStartLocationTextField:nil];
-    [self setEndLocationTextField:nil];
+    [self setStartLocationTextLabel:nil];
+    [self setEndLocationTextLabel:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -67,8 +69,12 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSLog(@"did select called");
 	if (indexPath.section == 0)
 		[self.nameTextField becomeFirstResponder];
+    
+   // [tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
@@ -80,11 +86,17 @@
 - (void)singleTap:(id)sender
 {
 	[nameTextField resignFirstResponder];
-    [startLocationTextField resignFirstResponder];
-    [endLocationTextField resignFirstResponder];
     tapRecognizer.enabled = NO;
 }
 
+- (void) viewWillAppear:(BOOL)animated {
+    self.navigationItem.title = self.routeData.title;
+    self.nameTextField.text = routeData.title;
+    NSLog(@"%@",routeData.startLocation);
+    NSLog(@"%@",routeData.endLocation);
+    self.startLocationTextLabel.text = routeData.startLocation;
+    self.endLocationTextLabel.text = routeData.endLocation;
+}
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     tapRecognizer.enabled = YES;
@@ -97,23 +109,23 @@
 
 - (IBAction)save:(id)sender {
     if(nameTextField.text.length == 0){
-        editAlertView  = [[UIAlertView alloc] initWithTitle:@"Route Name cannot be empty" message:nil delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        editAlertView  = [[UIAlertView alloc] initWithTitle:@"Route name cannot be empty" message:nil delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         editAlertView.alertViewStyle = UIAlertViewStyleDefault;
         [editAlertView show];
         nameTextField.text = self.routeData.title;
     }
     else{
         self.routeData.title = nameTextField.text;
-        self.routeData.startLocation = startLocationTextField.text;
-        self.routeData.endLocation = endLocationTextField.text;
+       // self.routeData.startLocation = startLocationTextField.text;
+        //self.routeData.endLocation = endLocationTextField.text;
     
         NSManagedObjectContext *context = [(AppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
         NSError *error;
         if (![context save:&error]) {
             NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
         }
-    
-        [self.delegate editRouteViewControllerDidSave:self withData:self.routeData];
+        [[self navigationController] popViewControllerAnimated:YES];
+        //[self.delegate editRouteViewControllerDidSave:self withData:self.routeData];
     }
 }
 

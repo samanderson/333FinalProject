@@ -12,9 +12,12 @@
 
 @interface ShareTableViewController ()
 {
+    NSMutableArray * finalTitles;
+    UIActivityIndicatorView *av;
 }
 
 @end
+
 
 @implementation ShareTableViewController
 
@@ -34,7 +37,7 @@
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView
 {
-    return [[UILocalizedIndexedCollation currentCollation] sectionIndexTitles];
+    return finalTitles;
 }
 
 -(NSArray *)partitionObjects:(NSArray *)array collationStringSelector:(SEL)selector
@@ -44,6 +47,8 @@
     
     NSInteger sectionCount = [[collation sectionTitles] count]; //section count is take from sectionTitles and not sectionIndexTitles
     NSMutableArray *unsortedSections = [NSMutableArray arrayWithCapacity:sectionCount];
+    
+    finalTitles = [[[UILocalizedIndexedCollation currentCollation] sectionIndexTitles] mutableCopy];
     
     //create an array to hold the data for each section
     for(int i = 0; i < sectionCount; i++)
@@ -56,7 +61,7 @@
     NSInteger index = 0;
     //NSLog([array objectAtIndex:0]);
     for (FacebookFriend *friend in array)
-    {
+    {        
         NSString* firstLetter = [friend.name substringToIndex:1];
         NSString* titleHeader = [titles objectAtIndex:index];
         if ([firstLetter isEqualToString:titleHeader] || index == sectionCount) {
@@ -67,6 +72,15 @@
                 titleHeader = [titles objectAtIndex:index];
             }
             [[unsortedSections objectAtIndex:index] addObject:friend];
+        }
+        
+    }
+    for(int i = sectionCount -1; i >= 0; i--)
+    {
+        if([[unsortedSections objectAtIndex:i ] count] == 0)
+        {
+            [unsortedSections removeObjectAtIndex:i];
+            [finalTitles removeObjectAtIndex:i];
         }
     }
     return unsortedSections;
@@ -79,7 +93,7 @@
 { 
     
     [super viewDidLoad];
-
+    finalTitles = [[NSMutableArray alloc] init];
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     if (![prefs arrayForKey:@"friends"]) {
         facebook = [[Facebook alloc] initWithAppId:@"266592116761408" andDelegate:self];
@@ -103,25 +117,61 @@
         }
         NSMutableArray *friends = [[NSMutableArray alloc] init];
         friends = (NSMutableArray*)[friendsTemp sortedArrayUsingSelector:@selector(compare:)];
-
+        
         self.tableData = [[NSMutableArray alloc] init];    
         self.tableData = [self partitionObjects:friends collationStringSelector:@selector(name)];
     }
     //Set the title
     self.navigationItem.title = @"Friends";
+    
+    UIBarButtonItem *getPathsButton = [[UIBarButtonItem alloc] initWithTitle:@"Get Paths" style:UIBarButtonItemStylePlain target: self action: @selector(getPaths)];
+    self.navigationItem.rightBarButtonItem = getPathsButton;
+    
+    av = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    [av setCenter:self.tableView.center];
+    av.tag  = 1;
+    av.opaque = TRUE;
+    //av.hidden = TRUE;
+    //av.hidesWhenStopped = TRUE;
+    //[av startAnimating];
+    [self.tableView addSubview:av];
 }
 
+- (void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    //[av stopAnimating];
+}
 
+-(void)getPaths {
+    //av.hidden = FALSE;
+    getPathsTVC *getPaths = [getPathsTVC alloc];
+    [[self navigationController] pushViewController:getPaths animated:YES];
+    
+}
 
 - (void)request:(FBRequest *)request didLoad:(id)result {
-    NSLog(@"Something sent back!");
-    if ([request.url isEqualToString:@"https://graph.facebook.com/me/friends"]) {    
+    if ([request.url isEqualToString:@"https://graph.facebook.com/me/friends"]) {   
+        NSLog(@"loading friends");
         NSArray *friendsArray = [(NSDictionary*)result objectForKey:@"data"];
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        [prefs setObject:friendsArray forKey:@"friends"];
+        
+        NSMutableArray *validFriends = [[NSMutableArray alloc] init];
+        NSMutableString *pingString = [[NSMutableString alloc] init];
+        for (NSDictionary *dict in friendsArray) {
+            [pingString appendString:[dict objectForKey:@"id"]];
+            [pingString appendString:@","];
+        }
+        clientRest *client = [[clientRest alloc] init];
+        NSString *valid = [client checkUser:pingString];
+        for (int i = 0; i < valid.length; i++) {
+            if ([valid characterAtIndex:i] == '1') {
+                [validFriends addObject:[friendsArray objectAtIndex:i]];
+            }
+        }
+        [prefs setObject:validFriends forKey:@"friends"];
         NSMutableArray *friendsTemp = [[NSMutableArray alloc] init];
-        for (int i = 0; i < [friendsArray count]; i++) {
-            NSDictionary *friend = [friendsArray objectAtIndex:i];
+        for (int i = 0; i < [validFriends count]; i++) {
+            NSDictionary *friend = [validFriends objectAtIndex:i];
             FacebookFriend *f = [[FacebookFriend alloc] initWithName:[friend objectForKey:@"name"] andID:[friend objectForKey:@"id"]];
             [friendsTemp addObject:f];
         }
@@ -186,9 +236,6 @@
 }
 
 
-
-
-
 - (void)viewDidUnload
 {
     [super viewDidUnload];
@@ -205,7 +252,9 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     //we use sectionTitles and not sections
-    return [[[UILocalizedIndexedCollation currentCollation] sectionTitles] count];
+    //  return [[[UILocalizedIndexedCollation currentCollation] sectionTitles] count];
+    NSLog(@"%d", [self.tableData count]);
+    return [self.tableData count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -216,28 +265,9 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    //BOOL showSection = [[self.tableData objectAtIndex:section] count] != 0;
-    //only show the section title if there are rows in the section
-    //return (showSection) ? [[[UILocalizedIndexedCollation currentCollation] sectionTitles] objectAtIndex:section] : nil;
-    return [[[UILocalizedIndexedCollation currentCollation] sectionIndexTitles] objectAtIndex:section];
-    
+    //return [[[UILocalizedIndexedCollation currentCollation] sectionIndexTitles] objectAtIndex:section];
+    return [finalTitles objectAtIndex:section];
 }
-
-/*
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    //#warning Potentially incomplete method implementation.
-    // Return the number of sections.
-    return 26;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-//#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    return [self.nameOfFriends count];
-}
-*/
 
 - (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index
 {
@@ -246,7 +276,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
+    
     UITableViewCell *cell;
     cell = [tableView dequeueReusableCellWithIdentifier:@"FriendName"];
     if (!cell) {
@@ -255,52 +285,10 @@
     
     FacebookFriend* friend = [[self.tableData objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
     
-        
-   
-    //NSString* friend = [self.nameOfFriends objectAtIndex:indexPath.row];
     cell.textLabel.text = friend.name;
-
+    
     return cell;
 }
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 #pragma mark - Table view delegate
 
@@ -310,9 +298,9 @@
     
     PathsTableViewController *shareController = [[PathsTableViewController alloc] initWithStyle:UITableViewStylePlain];
     shareController.friend = [[self.tableData objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-
+    
     [[self navigationController] pushViewController:shareController animated:YES];
-
+    
 }
 
 @end

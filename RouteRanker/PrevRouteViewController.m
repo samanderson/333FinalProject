@@ -38,7 +38,7 @@
 
 - (void)displayRoute
 {
-    self.navigationBar.title = self.routeData.title;
+    self.navigationItem.title = self.routeData.title;
     
     self.route = [Route routeFromRouteData:routeData];
     
@@ -58,7 +58,6 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
     [self displayRoute];
 }
 
@@ -74,6 +73,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.view addSubview:map];
     map.delegate = self;
     //[self displayRoute];
     

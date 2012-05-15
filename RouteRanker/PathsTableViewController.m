@@ -38,19 +38,31 @@
     UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithTitle:@"Share" style:UIBarButtonItemStylePlain target: self action: @selector(share)];
     self.navigationItem.rightBarButtonItem = shareButton;
 
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 - (void) share {
+    if (selectedRouteIndex < 0) 
+        return;
+    if (selectedRouteIndex >= [self.routes count])
+        return; 
     
+    clientRest *client = [[clientRest alloc] init];
+    NSUserDefaults * prefs = [NSUserDefaults standardUserDefaults];
+    NSString *myId = [prefs stringForKey:@"myID"];
+    NSString *myName = [prefs stringForKey:@"myName"];
+    NSLog(@"%@  %@", myId, myName);
+    RouteData* data = [self.routes objectAtIndex:selectedRouteIndex];
+    int IDNumber = [data.idNo intValue];
+    [client sharePath:IDNumber fromUser:myId name:myName withFriend:self.friend.ID];
+    
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 
 - (void) viewWillAppear:(BOOL)animated {
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    NSString * myName = [prefs stringForKey:@"myName"];
+    
     NSManagedObjectContext *context = [(AppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"RouteData"
@@ -59,6 +71,13 @@
     [fetchRequest setEntity:entity];
     NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest error:&error];
     self.routes = [[NSArray alloc] initWithArray:fetchedObjects];
+    self.routes = [self.routes sortedArrayUsingSelector:@selector(routeCompare:)];
+    NSMutableArray *displayRoutes = [[NSMutableArray alloc] initWithCapacity:1];
+    for (RouteData *route in self.routes) {
+        if ([route.ownerName isEqualToString:myName]) 
+            [displayRoutes addObject:route];
+    }
+    self.routes = [NSArray arrayWithArray:displayRoutes];
     selectedRouteIndex = -1;
     [self.tableView reloadData];
 }
@@ -101,48 +120,6 @@
     //cell.detailTextLabel.text = [NSString stringWithFormat:@"%.2f km", [route.distance doubleValue]];
     
     return cell;
-}
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-- (void) sharePath:(NSString*)path withFriend:(NSString*) friendName
-{
 }
 
 #pragma mark - Table view delegate

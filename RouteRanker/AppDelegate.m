@@ -19,11 +19,35 @@
 @synthesize persistentStoreCoordinator = __persistentStoreCoordinator;
 
 - (void)request:(FBRequest *)request didLoad:(id)result {
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     if ([request.url isEqualToString:@"https://graph.facebook.com/me/friends"]) {    
         NSArray *friendsArray = [(NSDictionary*)result objectForKey:@"data"];
-        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        [prefs setObject:friendsArray forKey:@"friends"];
+        
+        NSMutableArray *validFriends = [[NSMutableArray alloc] init];
+        NSMutableString *pingString = [[NSMutableString alloc] init];
+        for (NSDictionary *dict in friendsArray) {
+            [pingString appendString:[dict objectForKey:@"id"]];
+            [pingString appendString:@","];
+        }
+        clientRest *client = [[clientRest alloc] init];
+        NSString *valid = [client checkUser:pingString];
+        for (int i = 0; i < valid.length; i++) {
+            if ([valid characterAtIndex:i] == '1') {
+                [validFriends addObject:[friendsArray objectAtIndex:i]];
+            }
+            //NSLog(@"%c", [valid characterAtIndex:i]);
+            //NSLog(@"%d", i);
+        }
+        [prefs setObject:validFriends forKey:@"friends"];
+    } else if ([request.url isEqualToString:@"https://graph.facebook.com/me"]) {
+        NSDictionary *me = (NSDictionary*)result;
+        clientRest *client = [[clientRest alloc] init];
+        [client addUser:[me objectForKey:@"id"]];
+        [client createCookie:[me objectForKey:@"id"]];
+        [prefs setObject:[me objectForKey:@"id"] forKey:@"myID"];
+        [prefs setObject:[me objectForKey:@"name"] forKey:@"myName"];
     }
+    
 }
 
 - (void)requestLoading:(FBRequest *)request {
@@ -35,7 +59,8 @@
 }
 
 - (void)fbDidNotLogin:(BOOL)cancelled {
-    
+    NSArray *ar = [[NSArray alloc] initWithObjects:@"", nil];
+    [facebook authorize:ar];
 }
 
 - (void)fbDidLogout {
@@ -64,16 +89,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {    
     // Override point for customization after application launch.
-    tabBarController = [[UITabBarController alloc] init];
-    FirstViewController* vc1 = [[FirstViewController alloc] init];
-    MapViewController *mapView = [[MapViewController alloc] init]; 
-    mapView.managedObjectContext = self.managedObjectContext;
-    ReviewTVC * vc2 = [[ReviewTVC alloc] init];
-    ShareTableViewController* vc3 = [[ShareTableViewController alloc] init];
-    NSArray* controllers = [NSArray arrayWithObjects: vc1,mapView, vc2,vc3, nil];
-    tabBarController.viewControllers = controllers;
-    //mapView.managedObjectContext = self.managedObjectContext;
 
+    //[[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound)];
     window.rootViewController = tabBarController;
     
     facebook = [[Facebook alloc] initWithAppId:@"266592116761408" andDelegate:self];
@@ -84,6 +101,7 @@
         && [defaults objectForKey:@"FBExpirationDateKey"]) {
         facebook.accessToken = [defaults objectForKey:@"FBAccessTokenKey"];
         facebook.expirationDate = [defaults objectForKey:@"FBExpirationDateKey"];
+        [facebook requestWithGraphPath:@"me" andDelegate:self];
         [facebook requestWithGraphPath:@"me/friends" andDelegate:self];
     }
         
@@ -93,6 +111,32 @@
     return YES;
 }
 
+- (void) loginToFacebook {
+    facebook = [[Facebook alloc] initWithAppId:@"266592116761408" andDelegate:self];
+    
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if ([defaults objectForKey:@"FBAccessTokenKey"] 
+        && [defaults objectForKey:@"FBExpirationDateKey"]) {
+        facebook.accessToken = [defaults objectForKey:@"FBAccessTokenKey"];
+        facebook.expirationDate = [defaults objectForKey:@"FBExpirationDateKey"];
+        [facebook requestWithGraphPath:@"me" andDelegate:self];
+        [facebook requestWithGraphPath:@"me/friends" andDelegate:self];
+    }
+    
+    if (![facebook isSessionValid]) {
+        [facebook authorize:nil];
+    }
+
+}
+
+- (void) application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    //NSLog(@"My token is: %@", deviceToken);
+}
+
+- (void) application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+    //NSLog(@"Failed to get token with error: %@", error);
+}
 
 // For iOS 4.2+ support
 //Add the application:handleOpenURL: and application:openURL: methods with a call to the facebook instance:
@@ -107,6 +151,7 @@
     [defaults setObject:[facebook accessToken] forKey:@"FBAccessTokenKey"];
     [defaults setObject:[facebook expirationDate] forKey:@"FBExpirationDateKey"];
     [defaults synchronize];
+    [facebook requestWithGraphPath:@"me" andDelegate:self];
     [facebook requestWithGraphPath:@"me/friends" andDelegate:self];
 }
 							

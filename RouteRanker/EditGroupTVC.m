@@ -9,12 +9,10 @@
 #import "EditGroupTVC.h"
 
 @interface EditGroupTVC () {
-    NSArray* sectionTitles; 
     NSMutableArray* pathsInGroup;
     NSMutableArray* allOtherPaths; 
     NSMutableArray* tableData;
-    NSMutableArray* pathsToTakeOut;
-    NSMutableArray* pathsToAdd;
+    UITextField * activeField;
     BOOL reload; 
 }
 
@@ -25,13 +23,6 @@
 @synthesize group = _group;
 @synthesize groupList = _groupList;
 
-/*
-- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
-    sectionTitles = [[NSArray alloc] initWithObjects:@"Routes in Group", @"All Other Routes", nil];
-    
-    return sectionTitles; 
-}
-*/
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     if (section == 0) 
         return @"Paths in Group";    
@@ -56,6 +47,8 @@
             [allOtherPaths addObject:route];
         }
     }
+    [pathsInGroup sortUsingSelector:@selector(routeCompare:)];
+    [allOtherPaths sortUsingSelector:@selector(routeCompare:)];
     [tableData addObject:pathsInGroup];
     [tableData addObject:allOtherPaths];
     
@@ -104,6 +97,7 @@
     pathsInGroup = [[NSMutableArray alloc] init];
     allOtherPaths = [[NSMutableArray alloc] init];
     tableData = [[NSMutableArray alloc] init];
+    activeField = [[UITextField alloc] init];
 
     UIBarButtonItem *editNameButton = [[UIBarButtonItem alloc]
                                     initWithBarButtonSystemItem: UIBarButtonSystemItemCompose
@@ -202,14 +196,26 @@
     UITableViewCell *cell;
     cell = [tableView dequeueReusableCellWithIdentifier:@"RouteTitle"];
     if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"RouteTitle"];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"RouteTitle"];
     }
-    cell.showsReorderControl = YES;
-
+    //cell.showsReorderControl = YES;
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    NSString * myName = [prefs stringForKey:@"myName"];
+    
     RouteData *route= [[tableData objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
     cell.textLabel.text = route.title;
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%.2f km", [route.distance doubleValue]];
-
+    if ([route.ownerName isEqualToString:myName]) {
+        NSDateFormatter *format = [[NSDateFormatter alloc] init];
+        [format setDateFormat:@"MMM dd, yyyy h:mm a"];
+        NSString *dateString = [format stringFromDate:[route getStartTimeDate]];
+        cell.detailTextLabel.text = dateString;
+    }
+    else
+    {
+        cell.detailTextLabel.text = route.ownerName;
+    }
+    
+    
     return cell;
 }
 

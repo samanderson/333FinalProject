@@ -39,6 +39,7 @@
 @property (nonatomic, retain, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
 - (void)saveContext;
+- (void) loginToFacebook;
 - (NSURL *)applicationDocumentsDirectory;
 
 @end

@@ -18,10 +18,9 @@
 @end
 
 
-@interface MyRoutesTableViewController : UITableViewController <PrevRouteViewControllerDelegate>
+@interface MyRoutesTableViewController : UITableViewController
 
 @property (nonatomic, weak) id <MyRoutesTableViewControllerDelegate> delegate;
-@property (nonatomic, strong) NSArray *routes;
 - (IBAction)done:(id)sender;
 
 @end
